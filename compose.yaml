@@ -1,4 +1,6 @@
 services:
+  backend:
+
   mysql:
     image: 'mysql:latest'
     environment:
