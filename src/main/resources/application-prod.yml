@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: BonreCreme
+
+  datasource:
+    restaurant:
+      url: jdbc:postgresql://postgres:5432/restaurant_db
+      username: admin
+      password: admin
+      driver-class-name: org.postgresql.Driver
+    users:
+      url: jdbc:mysql://mysql:3306/users_db
+      username: admin
+      password: admin
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: bonrecreme-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+jwt:
+  secret: |
+    678e34f0f0987e80d7a917135d8f26e41e4db57ba2ca9f0c789b3bbb4ecffc9e24d6cb9c47d572fcb8e65b8dc76f6acf9e9ddb8240bed9194054a888ed9f6ee19737784570bb2e973b525c9cfa7d7541f7be096ce023e613342e05aca7b8c6bd87946db9c465b34312ab0addd10e0a13d6e6ebb5ac76abaaf47e9ae1e7c6fd04027aa5a9dd5e349c628666e4c9feb4675a2267f9f07d367ed5a96c1cc0246917251b51f4902beed7fb29de01ce69ede92208bdbe44a22979f193a5c098540c4db60b0517238e3c6554075e44f8384c5b0fca20af527ad43efd64c9438891c506290943fbc3d9832dc38dde359f21626212111777f2aacce15c6bc029d66985fd
+  expirationMilliSecond: 86400000
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
