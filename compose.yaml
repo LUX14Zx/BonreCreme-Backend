@@ -9,10 +9,12 @@ networks:
 volumes:
   restaurant_db:
 services:
-  backend:
+  bonrecreme:
     build: .
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     networks:
       - db
       - cache

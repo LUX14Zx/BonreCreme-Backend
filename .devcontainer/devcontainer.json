@@ -1,7 +1,15 @@
 // .devcontainer/devcontainer.json
 {
-  "dockerComposeFile": ["../docker-compose.yml"],
+  "dockerComposeFile": ["../compose.yaml"],
   "service": "backend",
   "workspaceFolder": "/workspace",
-  "shutdownAction": "stopCompose"
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "jetbrains": {
+      "settings": {
+        "Git4Idea:app:Git-Application-Settings.use_credential_helper": true,
+        "com.intellij:app:HttpConfigurable.use_proxy_pac": true
+      }
+    }
+  }
 }
