@@ -1,6 +1,9 @@
 package com.tlfdt.bonrecreme.repository.restaurant;
 
-import com.tlfdt.bonrecreme.model.restaurant.Restaurant;
+
+
+
+import com.tlfdt.bonrecreme.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
-    
+public interface UserRepository extends JpaRepository<User, Long> {
+
 
 }
