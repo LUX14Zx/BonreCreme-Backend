@@ -1,4 +1,7 @@
 spring:
+  docker:
+    compose:
+      enabled: true
   application:
     name: BonreCreme
 
