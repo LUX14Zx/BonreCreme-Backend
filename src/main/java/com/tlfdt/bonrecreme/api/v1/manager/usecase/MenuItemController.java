@@ -1,8 +1,8 @@
-package com.tlfdt.bonrecreme.api.v1.manager;
+package com.tlfdt.bonrecreme.api.v1.manager.usecase;
 
 import com.tlfdt.bonrecreme.api.v1.dto.ApiResponseDTO;
-import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItemRequestDTO;
-import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItem.MenuItemRequestDTO;
+import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
 import com.tlfdt.bonrecreme.service.menu.MenuItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -65,7 +65,7 @@ public class MenuItemController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<Void>> deleteMenuItem(@PathVariable Long id) {
         menuItemService.deleteMenuItem(id);
-        ApiResponseDTO<Void> response = ApiResponseDTO.<Void>builder()
+        ApiResponseDTO<Void> response = ApiResponseDTO.<Void> builder()
                 .status("success")
                 .message("Menu item deleted successfully")
                 .build();

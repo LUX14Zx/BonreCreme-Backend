@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.api.v1.manager.dto;
+package com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItem;
 
 import lombok.Data;
 import java.math.BigDecimal;

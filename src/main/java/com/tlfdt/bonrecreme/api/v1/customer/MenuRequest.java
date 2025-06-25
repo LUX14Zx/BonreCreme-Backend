@@ -1,16 +1,10 @@
 package com.tlfdt.bonrecreme.api.v1.customer;
 
-import com.tlfdt.bonrecreme.api.v1.customer.dto.MenuResponseDTO;
 import com.tlfdt.bonrecreme.api.v1.dto.ApiResponseDTO;
-import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
 
-import com.tlfdt.bonrecreme.repository.restaurant.MenuItemRepository;
-import com.tlfdt.bonrecreme.repository.restaurant.OrderItemRepository;
-import com.tlfdt.bonrecreme.repository.restaurant.OrderRepository;
-import com.tlfdt.bonrecreme.repository.restaurant.SeatTableRepository;
-import com.tlfdt.bonrecreme.service.menu.MenuService;
+import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.service.menu.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,24 +15,25 @@ import java.util.List;
 @RequestMapping("/api/v1/customer/menu")
 public class MenuRequest {
 
-    private final MenuService menuService;
+    private final MenuItemService menuItemService;
 
     @Autowired
-    public MenuRequest(MenuService menuService) {
-        this.menuService = menuService;
+    public MenuRequest(MenuItemService menuService, MenuItemService menuItemService) {
+        this.menuItemService = menuItemService;
     }
 
     /**
      * Fetch all menu items
+     *
      * @return List of all menu items
      */
     @GetMapping
-    public ResponseEntity<ApiResponseDTO<MenuResponseDTO>> getAllMenuItems() {
+    public ResponseEntity<ApiResponseDTO<List<MenuItemResponseDTO>>> getAllMenuItems() {
 
-        MenuResponseDTO menuResponseDTO = menuService.getAllMenuItems();
+        List<MenuItemResponseDTO> menuItemResponse = menuItemService.getAllMenuItems();
 
-        ApiResponseDTO<MenuResponseDTO> response = ApiResponseDTO.<MenuResponseDTO>builder()
-                .api_data(menuResponseDTO)
+        ApiResponseDTO<List<MenuItemResponseDTO>> response = ApiResponseDTO.<List<MenuItemResponseDTO>>builder()
+                .api_data(menuItemResponse)
                 .status("success")
                 .message("Menu items fetched successfully")
                 .build();
