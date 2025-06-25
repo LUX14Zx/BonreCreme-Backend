@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.service.customer;
+package com.tlfdt.bonrecreme.service.order;
 
 import com.tlfdt.bonrecreme.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;

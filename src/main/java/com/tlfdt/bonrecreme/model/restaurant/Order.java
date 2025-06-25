@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * Represents a customer's order.
+ * Represents a order's order.
  */
 @Entity
 @Table(name = "Orders")

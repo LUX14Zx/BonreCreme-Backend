@@ -1,6 +1,6 @@
 package com.tlfdt.bonrecreme.api.v1.customer;
 
-import com.tlfdt.bonrecreme.service.customer.OrderServiceImpl;
+import com.tlfdt.bonrecreme.service.order.OrderServiceImpl;
 import com.tlfdt.bonrecreme.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.api.v1.dto.ApiResponseDTO;
 import com.tlfdt.bonrecreme.model.restaurant.Order;
