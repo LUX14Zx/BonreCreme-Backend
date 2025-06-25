@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestaurantTable {
+public class SeatTable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class RestaurantTable {
     @Column(name = "status", nullable = false)
     private TableStatus status;
 
-    @OneToMany(mappedBy = "restaurantTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "seatTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference // Parent side: Will be serialized
     private List<Order> orders;
 }

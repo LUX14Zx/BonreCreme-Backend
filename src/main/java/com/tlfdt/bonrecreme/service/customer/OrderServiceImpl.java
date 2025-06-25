@@ -4,12 +4,13 @@ import com.tlfdt.bonrecreme.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
 import com.tlfdt.bonrecreme.model.restaurant.Order;
 import com.tlfdt.bonrecreme.model.restaurant.OrderItem;
-import com.tlfdt.bonrecreme.model.restaurant.RestaurantTable;
+
+import com.tlfdt.bonrecreme.model.restaurant.SeatTable;
 import com.tlfdt.bonrecreme.model.restaurant.enums.OrderStatus;
 import com.tlfdt.bonrecreme.repository.restaurant.MenuItemRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.OrderItemRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.OrderRepository;
-import com.tlfdt.bonrecreme.repository.restaurant.TableRepository;
+import com.tlfdt.bonrecreme.repository.restaurant.SeatTableRepository;
 import com.tlfdt.bonrecreme.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private final MenuItemRepository menuItemRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final TableRepository tableRepository;
+    private final SeatTableRepository seatTableRepository;
 
     /**
      * Creates a new order, including finding the table, creating the order items,
@@ -39,12 +40,12 @@ public class OrderServiceImpl implements OrderService {
     @Transactional("restaurantTransactionManager")
     public Order createOrder(MenuRequestDTO menuRequestDTO) {
         // Step 1: Validate that the table exists. Throws ResourceNotFoundException if not found.
-        Optional<RestaurantTable> table = tableRepository.findById(menuRequestDTO.getTableId());
+        Optional<SeatTable> table = seatTableRepository.findById(menuRequestDTO.getTableId());
 
         Order order = new Order();
         if (table.isPresent())
         {
-            order.setRestaurantTable(table.get());
+            order.setSeatTable(table.get());
             order.setStatus(OrderStatus.NEW);
 
         }

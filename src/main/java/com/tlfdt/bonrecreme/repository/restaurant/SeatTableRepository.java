@@ -1,6 +1,6 @@
 package com.tlfdt.bonrecreme.repository.restaurant;
 
-import com.tlfdt.bonrecreme.model.restaurant.RestaurantTable;
+import com.tlfdt.bonrecreme.model.restaurant.SeatTable;
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
@@ -11,11 +11,11 @@ import java.util.Optional;
 
 
 @Repository
-public interface TableRepository extends JpaRepository<RestaurantTable, Long> {
+public interface SeatTableRepository extends JpaRepository<SeatTable, Long> {
 
 
     @NonNull
-    Optional<RestaurantTable> findById(@NonNull Long id);
+    Optional<SeatTable> findById(@NonNull Long id);
 
     boolean existsById(@NonNull Long id);
 
@@ -25,5 +25,5 @@ public interface TableRepository extends JpaRepository<RestaurantTable, Long> {
      * @return list of tables with the specified status
      */
     @NonNull
-    List<RestaurantTable> findByStatus(@NonNull TableStatus status);
+    List<SeatTable> findByStatus(@NonNull TableStatus status);
 }

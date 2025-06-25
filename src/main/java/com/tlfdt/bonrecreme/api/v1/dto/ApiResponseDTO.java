@@ -1,6 +1,7 @@
 package com.tlfdt.bonrecreme.api.v1.dto;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ApiResponseDTO<Data> {
+public class ApiResponseDTO<Data> implements Serializable {
     private Data api_data;
     private String status;
     private String message;

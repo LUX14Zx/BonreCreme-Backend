@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,18 +13,17 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuResponseDTO {
+public class MenuResponseDTO implements Serializable {
     private List<MenuItemDTO> menuItems;
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MenuItemDTO {
+    public static class MenuItemDTO implements Serializable{
         private Long id;
         private String name;
         private String description;
         private BigDecimal price;
-        private String category;
     }
 
     /**
@@ -39,7 +39,6 @@ public class MenuResponseDTO {
                     dto.setName(menuItem.getName());
                     dto.setDescription(menuItem.getDescription());
                     dto.setPrice(menuItem.getPrice());
-                    dto.setCategory(menuItem.getCategory() != null ? menuItem.getCategory().getName() : null);
                     return dto;
                 })
                 .collect(Collectors.toList());

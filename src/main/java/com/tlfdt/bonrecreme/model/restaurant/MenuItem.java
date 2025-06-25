@@ -34,11 +34,6 @@ public class MenuItem {
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cagegory_id", nullable = false) // SQL uses "cagegory_id"
-    @JsonBackReference(value="category-menuitem")
-    private Category category;
-
     @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference(value="menuitem-orderitem")
     private List<OrderItem> orderItems;

@@ -1,7 +1,6 @@
 package com.tlfdt.bonrecreme.repository.restaurant;
 
 import com.tlfdt.bonrecreme.model.restaurant.Order;
-import com.tlfdt.bonrecreme.model.restaurant.RestaurantTable;
 import com.tlfdt.bonrecreme.model.restaurant.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
@@ -20,8 +19,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     boolean existsById(@NonNull Long id);
     
     List<Order> findByStatus(OrderStatus status);
-    
-    List<Order> findByRestaurantTable(RestaurantTable restaurantTable);
-    
-    List<Order> findByRestaurantTableAndStatus(RestaurantTable restaurantTable, OrderStatus status);
 }

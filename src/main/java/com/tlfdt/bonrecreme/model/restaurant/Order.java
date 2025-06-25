@@ -28,7 +28,7 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orders_table_id", nullable = false)
     @JsonBackReference // Child side: Will be omitted to break the loop
-    private RestaurantTable restaurantTable;
+    private SeatTable seatTable;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

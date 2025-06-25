@@ -1,6 +1,5 @@
 package com.tlfdt.bonrecreme.repository.restaurant;
 
-import com.tlfdt.bonrecreme.model.restaurant.Category;
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
@@ -21,8 +20,6 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     Optional<MenuItem> findByName(String name);
     
     boolean existsByName(String name);
-    
-    List<MenuItem> findByCategory(Category category);
     
     List<MenuItem> findByPriceLessThan(BigDecimal price);
     
