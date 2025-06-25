@@ -25,9 +25,6 @@ import java.util.Optional;
 public class MenuRequest {
 
     private final MenuItemRepository menuItemRepository;
-    private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
-    private final TableRepository tableRepository;
 
     @Autowired
     public MenuRequest(MenuItemRepository menuItemRepository, 
@@ -35,9 +32,6 @@ public class MenuRequest {
                       OrderItemRepository orderItemRepository,
                       TableRepository tableRepository) {
         this.menuItemRepository = menuItemRepository;
-        this.orderRepository = orderRepository;
-        this.orderItemRepository = orderItemRepository;
-        this.tableRepository = tableRepository;
     }
 
     /**
@@ -56,57 +50,5 @@ public class MenuRequest {
                 .build();
 
         return ResponseEntity.ok(response);
-    }
-
-    /**
-     * Create a new order with order items
-     * @param menuRequestDTO The order request containing table ID and order items
-     * @return The created order
-     */
-    @PostMapping("/order")
-    public ResponseEntity<ApiResponseDTO<Order>> createOrder(@RequestBody MenuRequestDTO menuRequestDTO) {
-        // Validate table exists
-        Optional<RestaurantTable> tableOptional = tableRepository.findById(menuRequestDTO.getTableId());
-        if (tableOptional.isEmpty()) {
-            ApiResponseDTO<Order> response = ApiResponseDTO.<Order>builder()
-                    .status("error")
-                    .message("Table not found")
-                    .build();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-
-        // Create new order
-        Order order = new Order();
-        order.setRestaurantTable(tableOptional.get());
-        order.setStatus(OrderStatus.BILLED);
-        order = orderRepository.save(order);
-
-        // Create order items
-        for (MenuRequestDTO.OrderItemRequest itemRequest : menuRequestDTO.getItems()) {
-            Optional<MenuItem> menuItemOptional = menuItemRepository.findById(itemRequest.getMenuItemId());
-            if (menuItemOptional.isPresent()) {
-                MenuItem menuItem = menuItemOptional.get();
-
-                OrderItem orderItem = new OrderItem();
-                orderItem.setOrder(order);
-                orderItem.setMenuItem(menuItem);
-                orderItem.setQuantity(itemRequest.getQuantity());
-                orderItem.setPrice(menuItem.getPrice());
-                orderItem.setSpecialRequests(itemRequest.getSpecialRequests());
-
-                orderItemRepository.save(orderItem);
-            }
-        }
-
-        // Refresh order to get updated order items
-        order = orderRepository.findById(order.getId()).orElse(order);
-
-        ApiResponseDTO<Order> response = ApiResponseDTO.<Order>builder()
-                .api_data(order)
-                .status("success")
-                .message("Order created successfully")
-                .build();
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

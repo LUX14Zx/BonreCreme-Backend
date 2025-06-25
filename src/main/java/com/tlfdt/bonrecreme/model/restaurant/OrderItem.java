@@ -1,12 +1,11 @@
 package com.tlfdt.bonrecreme.model.restaurant;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 /**
  * Represents a line item within an order, linking a menu item with a quantity.
@@ -25,19 +24,19 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference // Child side of Order <-> OrderItem
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item_id", nullable = false)
+    // No back reference needed here if MenuItem doesn't serialize OrderItems by default,
+    // but we will add it for consistency.
+    @JsonBackReference(value="menuitem-orderitem")
     private MenuItem menuItem;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
-
     @Column(name = "special_req", columnDefinition = "TEXT")
     private String specialRequests;
 }
-

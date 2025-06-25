@@ -23,7 +23,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     
     List<Order> findByRestaurantTable(RestaurantTable restaurantTable);
     
-    List<Order> findByTotalAmountGreaterThan(BigDecimal amount);
-    
     List<Order> findByRestaurantTableAndStatus(RestaurantTable restaurantTable, OrderStatus status);
 }
