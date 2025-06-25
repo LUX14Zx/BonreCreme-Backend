@@ -1,6 +1,7 @@
 package com.tlfdt.bonrecreme.config.database;
 
 import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -25,6 +26,14 @@ import java.util.HashMap;
     transactionManagerRef = "restaurantTransactionManager"
 )
 public class RestaurantConfig {
+
+    @Bean(name = "restaurantTransactionManager") // This name is crucial
+    public PlatformTransactionManager restaurantTransactionManager(
+            @Qualifier("restaurantEntityManagerFactory") LocalContainerEntityManagerFactoryBean restaurantEntityManagerFactory) {
+
+        assert restaurantEntityManagerFactory.getObject() != null;
+        return new JpaTransactionManager(restaurantEntityManagerFactory.getObject());
+    }
 
     @Bean
     @ConfigurationProperties("spring.datasource.restaurant")

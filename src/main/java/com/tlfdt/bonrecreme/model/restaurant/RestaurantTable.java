@@ -1,11 +1,12 @@
 package com.tlfdt.bonrecreme.model.restaurant;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
@@ -36,6 +37,6 @@ public class RestaurantTable {
     private TableStatus status;
 
     @OneToMany(mappedBy = "restaurantTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference // Parent side: Will be serialized
     private List<Order> orders;
 }
-

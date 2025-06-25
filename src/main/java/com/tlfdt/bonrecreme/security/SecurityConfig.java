@@ -1,8 +1,8 @@
 package com.tlfdt.bonrecreme.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tlfdt.bonrecreme.security.jwt.JwtAuthenticationEntryPoint;
-import com.tlfdt.bonrecreme.security.jwt.JwtAuthenticationFilter;
+//import com.tlfdt.bonrecreme.security.jwt.JwtAuthenticationEntryPoint;
+//import com.tlfdt.bonrecreme.security.jwt.JwtAuthenticationFilter;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +33,7 @@ import java.util.Map;
         scheme = "bearer"
 )
 public class SecurityConfig {
+    /*
     private final JwtAuthenticationFilter jwtFilter;
     private final JwtAuthenticationEntryPoint jwtEntrypoint;
 
@@ -45,7 +46,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
         return configuration.getAuthenticationManager();
-    }
+    }*/
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -59,11 +60,11 @@ public class SecurityConfig {
                         authorize
                                 .anyRequest().permitAll()
                 ).exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(jwtEntrypoint)
+                        //.authenticationEntryPoint(jwtEntrypoint)
                         .accessDeniedHandler(accessDeniedHandler())
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        //http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

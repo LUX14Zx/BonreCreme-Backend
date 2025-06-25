@@ -1,7 +1,7 @@
 package com.tlfdt.bonrecreme.model.restaurant;
 
-
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,15 +31,15 @@ public class MenuItem {
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    // The original schema used VARCHAR(50), but BigDecimal is more appropriate for monetary values.
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cagegory_id", nullable = false) // SQL uses "cagegory_id"
+    @JsonBackReference(value="category-menuitem")
     private Category category;
 
     @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference(value="menuitem-orderitem")
     private List<OrderItem> orderItems;
 }
-

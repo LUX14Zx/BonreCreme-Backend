@@ -1,11 +1,6 @@
 package com.tlfdt.bonrecreme.api.v1.cashier;
 
-import com.tlfdt.bonrecreme.api.v1.cashier.dto.QRcodeTable.QRcodeRequestDTO;
-import com.tlfdt.bonrecreme.api.v1.cashier.dto.QRcodeTable.QRcodeResponseDTO;
-import com.tlfdt.bonrecreme.repository.restaurant.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -16,9 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class QRcodeTable {
 
-    private final RestaurantRepository restaurantRepository;
 
-    /**
+    /*
      * Generate a QR code for a specific table
      * @param request The QR code generation request
      * @return QR code response with encoded data and metadata
