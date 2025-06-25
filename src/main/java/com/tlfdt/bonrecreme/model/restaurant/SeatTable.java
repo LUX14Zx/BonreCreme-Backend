@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Represents a physical table in the restaurant.
- * Renamed to RestaurantTable to avoid conflict with the @customer annotation.
+ * Renamed to RestaurantTable to avoid conflict with the @order annotation.
  */
 @Entity
 @Table(name = "Tables")
