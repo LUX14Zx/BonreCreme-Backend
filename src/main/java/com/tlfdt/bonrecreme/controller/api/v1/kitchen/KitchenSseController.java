@@ -23,7 +23,7 @@ public class KitchenSseController {
 
     @GetMapping("/stream")
     public SseEmitter streamOrders() {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        SseEmitter emitter = new SseEmitter(0L);
         this.emitters.add(emitter);
 
         emitter.onCompletion(() -> this.emitters.remove(emitter));
