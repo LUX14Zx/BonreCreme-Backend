@@ -20,5 +20,7 @@ public interface OrderService {
     Order createOrder(MenuRequestDTO menuRequestDTO);
     Order updateOrder(Long orderId, UpdateOrderRequestDTO requestDTO);
     Order updateOrderStatus(Long orderId, UpdateOrderStatusRequestDTO requestDTO);
+    Order updateOrderStatusReadyToServe(Long orderId);
+    Order serveOrder(Long orderId);
 
 }

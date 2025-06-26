@@ -166,4 +166,39 @@ public class OrderServiceImpl implements OrderService {
         return updatedOrder;
     }
 
+    @Transactional("restaurantTransactionManager")
+    @Override
+    public Order updateOrderStatusReadyToServe(Long orderId) {
+        // Step 1: Find the existing order
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomExceptionHandler("Order not found with id: " + orderId));
+
+        // Step 2: Update the status
+        order.setStatus(OrderStatus.valueOf("READY_TO_SERVE"));
+        Order updatedOrder = orderRepository.save(order);
+
+        // Step 3: Send the "update-order" event to Kafka
+        OrderNotificationDTO notificationDTO = OrderNotificationDTO.fromOrder(updatedOrder);
+        try {
+            String orderJson = objectMapper.writeValueAsString(notificationDTO);
+            kafkaProducerService.sendMessage("serve-order-topic", orderJson);
+        } catch (Exception e) {
+            LOGGER.error("Failed to serialize order update notification or send to Kafka", e);
+        }
+
+        return updatedOrder;
+    }
+    @Transactional("restaurantTransactionManager")
+    @Override
+    public Order serveOrder(Long orderId) {
+        // Step 1: Find the existing order
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomExceptionHandler("Order not found with id: " + orderId));
+
+        // Step 2: Update the status
+        order.setStatus(OrderStatus.valueOf("SERVED"));
+
+        return orderRepository.save(order);
+    }
+
 }
