@@ -1,7 +1,6 @@
 package com.tlfdt.bonrecreme.controller.api.v1.manager.usecase;
 
 import com.tlfdt.bonrecreme.controller.api.v1.dto.ApiResponseDTO;
-import com.tlfdt.bonrecreme.api.v1.manager.dto.Table.*;
 import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableResponseDTO;
 import com.tlfdt.bonrecreme.service.table.SeatTableService;
