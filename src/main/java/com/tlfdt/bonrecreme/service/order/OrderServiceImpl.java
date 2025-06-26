@@ -3,6 +3,7 @@ package com.tlfdt.bonrecreme.service.order;
 import com.tlfdt.bonrecreme.controller.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.OrderNotificationDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderStatusRequestDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
 import com.tlfdt.bonrecreme.model.restaurant.Order;
@@ -65,11 +66,15 @@ public class OrderServiceImpl implements OrderService {
                     Optional<MenuItem> menuItem = menuItemRepository.findById(itemRequest.getMenuItemId());
 
                     // Create the order item and link it to the parent order and menu item.
+
                     OrderItem orderItem = new OrderItem();
-                    orderItem.setOrder(savedOrder);
-                    orderItem.setMenuItem(menuItem.get());
-                    orderItem.setQuantity(itemRequest.getQuantity());
-                    orderItem.setSpecialRequests(itemRequest.getSpecialRequests());
+                    if (menuItem.isPresent())
+                    {
+                        orderItem.setOrder(savedOrder);
+                        orderItem.setMenuItem(menuItem.get());
+                        orderItem.setQuantity(itemRequest.getQuantity());
+                        orderItem.setSpecialRequests(itemRequest.getSpecialRequests());
+                    }
                     return orderItem;
                 })
                 .collect(Collectors.toList());
@@ -138,4 +143,27 @@ public class OrderServiceImpl implements OrderService {
 
         return savedOrder;
     }
+    @Transactional("restaurantTransactionManager")
+    @Override
+    public Order updateOrderStatus(Long orderId, UpdateOrderStatusRequestDTO requestDTO) {
+        // Step 1: Find the existing order
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomExceptionHandler("Order not found with id: " + orderId));
+
+        // Step 2: Update the status
+        order.setStatus(requestDTO.getStatus());
+        Order updatedOrder = orderRepository.save(order);
+
+        // Step 3: Send the "update-order" event to Kafka
+        OrderNotificationDTO notificationDTO = OrderNotificationDTO.fromOrder(updatedOrder);
+        try {
+            String orderJson = objectMapper.writeValueAsString(notificationDTO);
+            kafkaProducerService.sendMessage("update-order-topic", orderJson);
+        } catch (Exception e) {
+            LOGGER.error("Failed to serialize order update notification or send to Kafka", e);
+        }
+
+        return updatedOrder;
+    }
+
 }

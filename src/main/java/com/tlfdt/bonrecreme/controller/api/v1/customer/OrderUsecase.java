@@ -1,6 +1,7 @@
 package com.tlfdt.bonrecreme.controller.api.v1.customer;
 
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderStatusRequestDTO;
 import com.tlfdt.bonrecreme.service.order.OrderServiceImpl;
 import com.tlfdt.bonrecreme.controller.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.dto.ApiResponseDTO;
@@ -43,7 +44,8 @@ public class OrderUsecase {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-    @PutMapping("/{orderId}")
+
+    @PutMapping("/update/{orderId}")
     public ResponseEntity<ApiResponseDTO<Order>> updateOrder(
             @PathVariable Long orderId,
             @RequestBody UpdateOrderRequestDTO requestDTO) {

@@ -2,6 +2,7 @@ package com.tlfdt.bonrecreme.service.order;
 
 import com.tlfdt.bonrecreme.controller.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderStatusRequestDTO;
 import com.tlfdt.bonrecreme.model.restaurant.Order;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,4 +19,6 @@ public interface OrderService {
      */
     Order createOrder(MenuRequestDTO menuRequestDTO);
     Order updateOrder(Long orderId, UpdateOrderRequestDTO requestDTO);
+    Order updateOrderStatus(Long orderId, UpdateOrderStatusRequestDTO requestDTO);
+
 }
