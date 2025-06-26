@@ -1,12 +1,10 @@
 package com.tlfdt.bonrecreme.controller.api.v1.customer;
 
-import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderStatusRequestDTO;
-import com.tlfdt.bonrecreme.service.order.OrderServiceImpl;
 import com.tlfdt.bonrecreme.controller.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.dto.ApiResponseDTO;
-import com.tlfdt.bonrecreme.model.restaurant.Order;
-
+import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.OrderNotificationDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
+import com.tlfdt.bonrecreme.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,27 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/customer/order")
 public class OrderUsecase {
 
-    private final OrderServiceImpl orderService;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderUsecase(OrderServiceImpl orderService) {
+    public OrderUsecase(OrderService orderService) {
         this.orderService = orderService;
     }
-    /**
-     * Creates a new order with a list of order items.
-     * Delegates the core logic to the OrderService.
-     *
-     * @param menuRequestDTO The order request containing table ID and order items.
-     * @return A ResponseEntity containing the created order.
-     */
+
     @PostMapping
-    public ResponseEntity<ApiResponseDTO<Order>> createOrder(@RequestBody MenuRequestDTO menuRequestDTO) {
+    public ResponseEntity<ApiResponseDTO<OrderNotificationDTO>> createOrder(@RequestBody MenuRequestDTO menuRequestDTO) {
+        OrderNotificationDTO createdOrder = orderService.createOrder(menuRequestDTO);
 
-        // Delegate the business logic to the service layer
-        Order createdOrder = orderService.createOrder(menuRequestDTO);
-
-        // Build a standardized API response
-        ApiResponseDTO<Order> response = ApiResponseDTO.<Order>builder()
+        ApiResponseDTO<OrderNotificationDTO> response = ApiResponseDTO.<OrderNotificationDTO>builder()
                 .api_data(createdOrder)
                 .status("success")
                 .message("Order created successfully")
@@ -46,13 +35,13 @@ public class OrderUsecase {
     }
 
     @PutMapping("/update/{orderId}")
-    public ResponseEntity<ApiResponseDTO<Order>> updateOrder(
+    public ResponseEntity<ApiResponseDTO<OrderNotificationDTO>> updateOrder(
             @PathVariable Long orderId,
             @RequestBody UpdateOrderRequestDTO requestDTO) {
 
-        Order updatedOrder = orderService.updateOrder(orderId, requestDTO);
+        OrderNotificationDTO updatedOrder = orderService.updateOrder(orderId, requestDTO);
 
-        ApiResponseDTO<Order> response = ApiResponseDTO.<Order>builder()
+        ApiResponseDTO<OrderNotificationDTO> response = ApiResponseDTO.<OrderNotificationDTO>builder()
                 .api_data(updatedOrder)
                 .status("success")
                 .message("Order updated successfully")
@@ -61,4 +50,3 @@ public class OrderUsecase {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
-

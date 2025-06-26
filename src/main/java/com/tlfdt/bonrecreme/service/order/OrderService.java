@@ -1,6 +1,7 @@
 package com.tlfdt.bonrecreme.service.order;
 
 import com.tlfdt.bonrecreme.controller.api.v1.customer.dto.MenuRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.OrderNotificationDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderStatusRequestDTO;
 import com.tlfdt.bonrecreme.model.restaurant.Bill;
@@ -17,11 +18,12 @@ public interface OrderService {
      * @param menuRequestDTO DTO containing the table ID and a list of items to order.
      * @return The newly created Order entity.
      */
-    Order createOrder(MenuRequestDTO menuRequestDTO);
-    Order updateOrder(Long orderId, UpdateOrderRequestDTO requestDTO);
-    Order updateOrderStatus(Long orderId, UpdateOrderStatusRequestDTO requestDTO);
-    Order updateOrderStatusReadyToServe(Long orderId);
-    Order serveOrder(Long orderId);
+
+    OrderNotificationDTO createOrder(MenuRequestDTO menuRequestDTO);
+    OrderNotificationDTO updateOrder(Long orderId, UpdateOrderRequestDTO requestDTO);
+    OrderNotificationDTO updateOrderStatus(Long orderId, UpdateOrderStatusRequestDTO requestDTO);
+    OrderNotificationDTO updateOrderStatusReadyToServe(Long orderId);
+    OrderNotificationDTO serveOrder(Long orderId);
     Bill checkoutBillTable(Long tableId);
 
 }

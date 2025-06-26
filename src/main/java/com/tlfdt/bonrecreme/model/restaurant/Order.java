@@ -1,6 +1,9 @@
 package com.tlfdt.bonrecreme.model.restaurant;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.tlfdt.bonrecreme.model.restaurant.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +19,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Order {
 
     /**
@@ -31,6 +37,8 @@ public class Order {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seat_table_id", referencedColumnName = "table_id")
+    @JsonManagedReference
+    @JsonBackReference
     private SeatTable seatTable;
 
     /**
@@ -45,6 +53,8 @@ public class Order {
      * 'orphanRemoval = true' ensures that if an OrderItem is removed from this list, it's also deleted from the database.
      */
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    @JsonBackReference
     private List<OrderItem> orderItems;
 
     /**
