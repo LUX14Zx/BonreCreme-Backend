@@ -26,11 +26,9 @@ public class OrderStatusManagement {
     private final OrderService orderService;
 
     @PutMapping(
-            path = "/update/{orderId}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.TEXT_PLAIN_VALUE
+            path = "/update/{orderId}"
     )
-    public ResponseEntity<ApiResponseDTO<Order>> updateOrder(
+    public ResponseEntity<ApiResponseDTO<Order>> updateOrderStatus(
             @PathVariable Long orderId,
             @Valid @RequestBody UpdateOrderStatusRequestDTO requestDTO) {
 
@@ -44,19 +42,4 @@ public class OrderStatusManagement {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    /*
-    @PostMapping(
-            path = "/hi"
-            //consumes = MediaType.APPLICATION_JSON_VALUE,
-            //produces = MediaType.TEXT_PLAIN_VALUE
-    )
-    public String sayHi(
-
-            @RequestBody UpdateOrderStatusRequestDTO requestDTO
-    )
-             {
-        // now Spring will JSON-deserialize {"status":"arm"} → body.get("status") == "arm"
-        return requestDTO.toString();
-    }*/
 }

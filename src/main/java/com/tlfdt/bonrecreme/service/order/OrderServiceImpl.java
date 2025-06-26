@@ -151,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new CustomExceptionHandler("Order not found with id: " + orderId));
 
         // Step 2: Update the status
-        order.setStatus(requestDTO.getStatus());
+        order.setStatus(OrderStatus.valueOf(requestDTO.getStatus()));
         Order updatedOrder = orderRepository.save(order);
 
         // Step 3: Send the "update-order" event to Kafka
