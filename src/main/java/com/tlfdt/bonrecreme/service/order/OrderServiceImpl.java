@@ -5,23 +5,19 @@ import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.OrderNotificationDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderStatusRequestDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
-import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
-import com.tlfdt.bonrecreme.model.restaurant.Order;
-import com.tlfdt.bonrecreme.model.restaurant.OrderItem;
+import com.tlfdt.bonrecreme.model.restaurant.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tlfdt.bonrecreme.repository.restaurant.*;
 import com.tlfdt.bonrecreme.service.order.masseging.KafkaProducerService;
+import com.tlfdt.bonrecreme.utils.bill.GetBill;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.tlfdt.bonrecreme.model.restaurant.SeatTable;
 import com.tlfdt.bonrecreme.model.restaurant.enums.OrderStatus;
-import com.tlfdt.bonrecreme.repository.restaurant.MenuItemRepository;
-import com.tlfdt.bonrecreme.repository.restaurant.OrderItemRepository;
-import com.tlfdt.bonrecreme.repository.restaurant.OrderRepository;
-import com.tlfdt.bonrecreme.repository.restaurant.SeatTableRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final SeatTableRepository seatTableRepository;
+    private final BillRepository billRepository;
     private final KafkaProducerService kafkaProducerService;
     private final ObjectMapper objectMapper; //
 
@@ -182,8 +179,8 @@ public class OrderServiceImpl implements OrderService {
         try {
             String orderJson = objectMapper.writeValueAsString(notificationDTO);
             kafkaProducerService.sendMessage("serve-order-topic", orderJson);
-        } catch (Exception e) {
-            LOGGER.error("Failed to serialize order update notification or send to Kafka", e);
+        } catch (Exception err) {
+            LOGGER.error("Failed to serialize order update notification or send to Kafka", err);
         }
 
         return updatedOrder;
@@ -200,5 +197,44 @@ public class OrderServiceImpl implements OrderService {
 
         return orderRepository.save(order);
     }
+
+    @Override
+    @Transactional("restaurantTransactionManager")
+    public Bill checkoutBillTable(Long tableId) {
+
+        // Step 2: Find all orders for this table that are 'SERVED'.
+        List<Order> servedOrders = orderRepository.findBySeatTableIdAndStatusAndBillIsNull(tableId, OrderStatus.SERVED);
+
+        if (servedOrders.isEmpty()) {
+            throw new CustomExceptionHandler("No served orders found for table with id: " + tableId);
+        }
+
+        // Step 3: Calculate the total amount for the bill from all served orders.
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (Order orderToBill : servedOrders) {
+            if (orderToBill.getOrderItems() != null) {
+                for (OrderItem item : orderToBill.getOrderItems()) {
+                    MenuItem menuItem = menuItemRepository.findById(item.getMenuItem().getId())
+                            .orElseThrow(() -> new CustomExceptionHandler("MenuItem not found for order item: " + item.getId()));
+                    totalAmount = totalAmount.add(menuItem.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+                }
+            }
+        }
+        // Step 4: Create a new GetBill entity.
+        Bill bill = GetBill.getBill(servedOrders, totalAmount);
+
+        // Step 5: Save the GetBill to the database.
+        Bill savedBill = billRepository.save(bill);
+
+        // Step 6: Update the status of ALL served orders to BILLED.
+        for (Order order : servedOrders) {
+            order.setStatus(OrderStatus.BILLED);
+            orderRepository.save(order);
+        }
+
+        return savedBill;
+    }
+
 
 }

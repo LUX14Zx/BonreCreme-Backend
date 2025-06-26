@@ -1,11 +1,8 @@
 package com.tlfdt.bonrecreme.model.restaurant.enums;
 
-/**
- * Represents the status of a restaurant table.
- */
 public enum TableStatus {
-    Available,
-    Reserved,
-    Occupied
+    AVAILABLE,
+    OCCUPIED,
+    RESERVED,
+    BILLING // Added to show the table is in the process of checkout.
 }
-

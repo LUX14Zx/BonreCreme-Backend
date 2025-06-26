@@ -5,10 +5,10 @@ package com.tlfdt.bonrecreme.model.restaurant.enums;
  */
 public enum OrderStatus {
     NEW,
-    COOKING ,
+    UPDATE,
+    COOKING,
     READY_TO_SERVE,
-            SERVED,
-    BILLED,
-    UPDATE, PAID
-
-    }
+    SERVED,
+    CANCELLED,
+    BILLED
+}

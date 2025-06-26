@@ -3,8 +3,8 @@ package com.tlfdt.bonrecreme.service.order;
 import com.tlfdt.bonrecreme.controller.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderStatusRequestDTO;
+import com.tlfdt.bonrecreme.model.restaurant.Bill;
 import com.tlfdt.bonrecreme.model.restaurant.Order;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service interface for handling order-related business logic.
@@ -22,5 +22,6 @@ public interface OrderService {
     Order updateOrderStatus(Long orderId, UpdateOrderStatusRequestDTO requestDTO);
     Order updateOrderStatusReadyToServe(Long orderId);
     Order serveOrder(Long orderId);
+    Bill checkoutBillTable(Long tableId);
 
 }

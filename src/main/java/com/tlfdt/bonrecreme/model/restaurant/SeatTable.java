@@ -4,6 +4,7 @@ package com.tlfdt.bonrecreme.model.restaurant;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SeatTable {
 
     @Id
@@ -26,7 +28,7 @@ public class SeatTable {
     @Column(name = "table_id")
     private Long id;
 
-    @Column(name = "table_number", nullable = false)
+    @Column(name = "table_number", nullable = false, unique = true)
     private Integer tableNumber;
 
     @Column(name = "seating_capacity", nullable = false)

@@ -25,7 +25,7 @@ public class SeatTableServiceImpl implements SeatTableService {
         SeatTable table = new SeatTable();
         table.setTableNumber(requestDTO.getTableNumber());
         table.setSeatingCapacity(requestDTO.getSeatingCapacity());
-        table.setStatus(requestDTO.getStatus() != null ? requestDTO.getStatus() : TableStatus.Available);
+        table.setStatus(TableStatus.AVAILABLE);
 
         SeatTable savedTable = tableRepository.save(table);
         return TableResponseDTO.fromRestaurantTable(savedTable);
@@ -53,7 +53,7 @@ public class SeatTableServiceImpl implements SeatTableService {
 
         table.setTableNumber(requestDTO.getTableNumber());
         table.setSeatingCapacity(requestDTO.getSeatingCapacity());
-        table.setStatus(requestDTO.getStatus());
+        table.setStatus(TableStatus.valueOf(requestDTO.getStatus()));
 
         SeatTable updatedTable = tableRepository.save(table);
         return TableResponseDTO.fromRestaurantTable(updatedTable);

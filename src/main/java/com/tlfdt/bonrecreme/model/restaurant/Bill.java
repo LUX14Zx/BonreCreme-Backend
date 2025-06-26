@@ -1,41 +1,60 @@
 package com.tlfdt.bonrecreme.model.restaurant;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.tlfdt.bonrecreme.model.restaurant.enums.BillStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
 
 /**
- * Represents the bill for an order.
+ * Represents a bill for a specific table, containing multiple orders.
  */
 @Entity
-@Table(name = "Bills")
+@Table(name = "bills")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Bill {
 
+    /**
+     * The unique identifier for the bill.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bill_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false, unique = true)
-    private Order order;
+    /**
+     * The table to which this bill belongs.
+     * The 'referencedColumnName' is explicitly set to 'id' to resolve potential mapping ambiguity.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seat_table_id", referencedColumnName = "table_id")
+    private SeatTable seatTable;
 
-    @Column(name = "amount", nullable = false, precision = 10, scale = 2)
-    private BigDecimal amount;
+    /**
+     * The list of orders included in this bill.
+     * The 'mappedBy' attribute indicates that the Order entity owns the relationship.
+     */
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
-    @Column(name = "payment_method", length = 30, nullable = false)
-    private String paymentMethod;
+    /**
+     * The total calculated amount for the bill.
+     */
+    @Column(name = "total_amount", nullable = false)
+    private BigDecimal totalAmount;
 
-    @Column(name = "payment_status", length = 20, nullable = false)
-    private String paymentStatus;
+    /**
+     * The current status of the bill (e.g., UNPAID, PAID).
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private BillStatus status;
 
-    @OneToOne(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private SalesReport salesReport;
+    @Column String paymentMethod;
 }
-
