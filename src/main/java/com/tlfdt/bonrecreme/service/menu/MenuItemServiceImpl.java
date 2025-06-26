@@ -1,7 +1,7 @@
 package com.tlfdt.bonrecreme.service.menu;
 
-import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItem.MenuItemRequestDTO;
-import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;

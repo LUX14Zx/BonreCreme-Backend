@@ -1,6 +1,7 @@
 package com.tlfdt.bonrecreme.service.table;
 
-import com.tlfdt.bonrecreme.api.v1.manager.dto.Table.*;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableResponseDTO;
 
 
 import java.util.List;
