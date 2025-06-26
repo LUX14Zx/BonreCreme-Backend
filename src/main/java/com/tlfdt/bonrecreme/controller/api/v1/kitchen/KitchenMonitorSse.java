@@ -21,9 +21,9 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/api/v1/kitchen")
 @Component // Mark as a component to be injectable
-public class KitchenSseController {
+public class KitchenMonitorSse {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KitchenSseController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KitchenMonitorSse.class);
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
