@@ -33,8 +33,8 @@ public class OrderStatusController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping(path = "/update/{orderId}/ready")
-    public ResponseEntity<ApiResponseDTO<OrderNotificationDTO>> orderReadyToServe(
+    @PutMapping(path = "/serve/{orderId}/")
+    public ResponseEntity<ApiResponseDTO<OrderNotificationDTO>> serveOrder(
             @PathVariable Long orderId) {
 
         OrderNotificationDTO updatedOrder = orderService.updateOrderStatusReadyToServe(orderId);
