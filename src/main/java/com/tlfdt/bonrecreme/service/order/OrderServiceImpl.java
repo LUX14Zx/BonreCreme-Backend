@@ -161,35 +161,4 @@ public class OrderServiceImpl implements OrderService {
         Order savedOrder = orderRepository.save(order);
         return OrderNotificationDTO.fromOrder(savedOrder);
     }
-
-    @Override
-    @Transactional("restaurantTransactionManager")
-    public Bill checkoutBillTable(Long tableId) {
-        List<Order> servedOrders = orderRepository.findBySeatTableIdAndStatusAndBillIsNull(tableId, OrderStatus.SERVED);
-
-        if (servedOrders.isEmpty()) {
-            throw new CustomExceptionHandler("No served orders found for table with id: " + tableId);
-        }
-
-        BigDecimal totalAmount = BigDecimal.ZERO;
-
-        for (Order orderToBill : servedOrders) {
-            if (orderToBill.getOrderItems() != null) {
-                for (OrderItem item : orderToBill.getOrderItems()) {
-                    MenuItem menuItem = menuItemRepository.findById(item.getMenuItem().getId())
-                            .orElseThrow(() -> new CustomExceptionHandler("MenuItem not found for order item: " + item.getId()));
-                    totalAmount = totalAmount.add(menuItem.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
-                }
-            }
-        }
-        Bill bill = GetBill.getBill(servedOrders, totalAmount);
-        Bill savedBill = billRepository.save(bill);
-
-        for (Order order : servedOrders) {
-            order.setStatus(OrderStatus.BILLED);
-            orderRepository.save(order);
-        }
-
-        return savedBill;
-    }
 }

@@ -24,6 +24,5 @@ public interface OrderService {
     OrderNotificationDTO updateOrderStatus(Long orderId, UpdateOrderStatusRequestDTO requestDTO);
     OrderNotificationDTO updateOrderStatusReadyToServe(Long orderId);
     OrderNotificationDTO serveOrder(Long orderId);
-    Bill checkoutBillTable(Long tableId);
 
 }
