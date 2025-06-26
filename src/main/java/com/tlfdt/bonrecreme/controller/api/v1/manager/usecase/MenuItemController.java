@@ -1,8 +1,8 @@
-package com.tlfdt.bonrecreme.api.v1.manager.usecase;
+package com.tlfdt.bonrecreme.controller.api.v1.manager.usecase;
 
-import com.tlfdt.bonrecreme.api.v1.dto.ApiResponseDTO;
-import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItem.MenuItemRequestDTO;
-import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.dto.ApiResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
 import com.tlfdt.bonrecreme.service.menu.MenuItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

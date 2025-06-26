@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.api.v1.customer.dto;
+package com.tlfdt.bonrecreme.controller.api.v1.customer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

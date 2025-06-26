@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.api.v1.cashier.dto.QRcodeTable;
+package com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.QRcodeTable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

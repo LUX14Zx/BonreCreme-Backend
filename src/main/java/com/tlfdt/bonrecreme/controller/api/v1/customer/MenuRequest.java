@@ -1,8 +1,8 @@
-package com.tlfdt.bonrecreme.api.v1.customer;
+package com.tlfdt.bonrecreme.controller.api.v1.customer;
 
-import com.tlfdt.bonrecreme.api.v1.dto.ApiResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.dto.ApiResponseDTO;
 
-import com.tlfdt.bonrecreme.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
 import com.tlfdt.bonrecreme.service.menu.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

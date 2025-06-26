@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.api.v1.customer.dto;
+package com.tlfdt.bonrecreme.controller.api.v1.customer.dto;
 
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
 import lombok.AllArgsConstructor;

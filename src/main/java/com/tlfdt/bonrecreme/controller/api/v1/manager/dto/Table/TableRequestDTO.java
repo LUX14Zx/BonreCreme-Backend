@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.api.v1.manager.dto.Table;
+package com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table;
 
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
 import lombok.Data;

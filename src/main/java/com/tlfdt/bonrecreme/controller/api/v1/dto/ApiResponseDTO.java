@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.api.v1.dto;
+package com.tlfdt.bonrecreme.controller.api.v1.dto;
 import lombok.*;
 
 import java.io.Serializable;

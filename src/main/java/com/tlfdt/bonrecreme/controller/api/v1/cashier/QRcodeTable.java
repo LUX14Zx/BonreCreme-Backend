@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.api.v1.cashier;
+package com.tlfdt.bonrecreme.controller.api.v1.cashier;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
