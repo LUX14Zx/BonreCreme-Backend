@@ -9,6 +9,6 @@ public enum OrderStatus {
     READY_TO_SERVE,
             SERVED,
     BILLED,
-            PAID
+    UPDATE, PAID
 
     }

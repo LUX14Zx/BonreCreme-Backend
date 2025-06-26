@@ -2,6 +2,8 @@ package com.tlfdt.bonrecreme.service.order;
 
 import com.tlfdt.bonrecreme.controller.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.OrderNotificationDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
+import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
 import com.tlfdt.bonrecreme.model.restaurant.Order;
 import com.tlfdt.bonrecreme.model.restaurant.OrderItem;
@@ -18,7 +20,6 @@ import com.tlfdt.bonrecreme.repository.restaurant.MenuItemRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.OrderItemRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.OrderRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.SeatTableRepository;
-import com.tlfdt.bonrecreme.service.OrderService;
 
 import java.util.List;
 import java.util.Optional;
@@ -89,6 +90,50 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception e) {
             LOGGER.error("Failed to serialize order notification or send to Kafka", e);
             // Decide how to handle this error. Maybe a fallback mechanism?
+        }
+
+        return savedOrder;
+    }
+
+
+    @Transactional("restaurantTransactionManager")
+    @Override
+    public Order updateOrder(Long orderId, UpdateOrderRequestDTO requestDTO) {
+        // Step 1: Find the existing order
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomExceptionHandler("Order not found with id: " + orderId));
+
+        // Step 2: Clear the old order items
+        orderItemRepository.deleteAll(order.getOrderItems());
+        order.getOrderItems().clear();
+
+        // Step 3: Create the new list of order items from the request
+        List<OrderItem> updatedItems = requestDTO.getItems().stream()
+                .map(itemRequest -> {
+                    MenuItem menuItem = menuItemRepository.findById(itemRequest.getMenuItemId())
+                            .orElseThrow(() -> new CustomExceptionHandler("MenuItem not found with id: " + itemRequest.getMenuItemId()));
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setOrder(order);
+                    orderItem.setMenuItem(menuItem);
+                    orderItem.setQuantity(itemRequest.getQuantity());
+                    orderItem.setSpecialRequests(itemRequest.getSpecialRequests());
+                    return orderItem;
+                })
+                .collect(Collectors.toList());
+
+        // Step 4: Save the new items and update the order
+        orderItemRepository.saveAll(updatedItems);
+        order.setOrderItems(updatedItems);
+        order.setStatus(OrderStatus.UPDATE); // Update status to reflect the change
+        Order savedOrder = orderRepository.save(order);
+
+        // Step 5: Send the "update-order" event to Kafka
+        OrderNotificationDTO notificationDTO = OrderNotificationDTO.fromOrder(savedOrder);
+        try {
+            String orderJson = objectMapper.writeValueAsString(notificationDTO);
+            kafkaProducerService.sendMessage("update-order-topic", orderJson);
+        } catch (Exception e) {
+            LOGGER.error("Failed to serialize order update notification or send to Kafka", e);
         }
 
         return savedOrder;

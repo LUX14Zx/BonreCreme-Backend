@@ -1,7 +1,9 @@
-package com.tlfdt.bonrecreme.service;
+package com.tlfdt.bonrecreme.service.order;
 
 import com.tlfdt.bonrecreme.controller.api.v1.customer.dto.MenuRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
 import com.tlfdt.bonrecreme.model.restaurant.Order;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service interface for handling order-related business logic.
@@ -15,4 +17,5 @@ public interface OrderService {
      * @return The newly created Order entity.
      */
     Order createOrder(MenuRequestDTO menuRequestDTO);
+    Order updateOrder(Long orderId, UpdateOrderRequestDTO requestDTO);
 }

@@ -27,4 +27,15 @@ public class KafkaConsumerService {
             LOGGER.error("Failed to deserialize order message or send to kitchen", err);
         }
     }
+
+    @KafkaListener(topics = "update-order-topic", groupId = "kitchen-group")
+    public void consumeOrderUpdate(String message) {
+        try {
+            OrderNotificationDTO order = objectMapper.readValue(message, OrderNotificationDTO.class);
+            LOGGER.info("Consumed order update: {}", order);
+            kitchenSseController.sendOrderUpdateToKitchen(order);
+        } catch (Exception err) {
+            LOGGER.error("Failed to deserialize order update message or send to kitchen", err);
+        }
+    }
 }

@@ -13,12 +13,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customer/menu")
-public class MenuRequest {
+public class MenuUsecase {
 
     private final MenuItemService menuItemService;
 
     @Autowired
-    public MenuRequest(MenuItemService menuService, MenuItemService menuItemService) {
+    public MenuUsecase(MenuItemService menuService, MenuItemService menuItemService) {
         this.menuItemService = menuItemService;
     }
 
