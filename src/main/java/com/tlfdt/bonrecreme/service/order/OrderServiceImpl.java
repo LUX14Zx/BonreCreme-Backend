@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
             String orderJson = objectMapper.writeValueAsString(notificationDTO);
             kafkaProducerService.sendMessage("order-topic", orderJson);
         } catch (Exception e) {
-            LOGGER.error("Failed to serialize order notification or send to Kafka", e);
+            LOGGER.error("Failed to serialize order notification or send to kafka", e);
         }
 
         return notificationDTO;
@@ -106,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
             String orderJson = objectMapper.writeValueAsString(notificationDTO);
             kafkaProducerService.sendMessage("update-order-topic", orderJson);
         } catch (Exception e) {
-            LOGGER.error("Failed to serialize order update notification or send to Kafka", e);
+            LOGGER.error("Failed to serialize order update notification or send to kafka", e);
         }
 
         return notificationDTO;
@@ -126,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
             String orderJson = objectMapper.writeValueAsString(notificationDTO);
             kafkaProducerService.sendMessage("update-order-topic", orderJson);
         } catch (Exception e) {
-            LOGGER.error("Failed to serialize order update notification or send to Kafka", e);
+            LOGGER.error("Failed to serialize order update notification or send to kafka", e);
         }
 
         return notificationDTO;
@@ -146,7 +146,7 @@ public class OrderServiceImpl implements OrderService {
             String orderJson = objectMapper.writeValueAsString(notificationDTO);
             kafkaProducerService.sendMessage("serve-order-topic", orderJson);
         } catch (Exception err) {
-            LOGGER.error("Failed to serialize order update notification or send to Kafka", err);
+            LOGGER.error("Failed to serialize order update notification or send to kafka", err);
         }
 
         return notificationDTO;

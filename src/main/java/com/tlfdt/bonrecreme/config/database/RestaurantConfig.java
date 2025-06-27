@@ -56,12 +56,4 @@ public class RestaurantConfig {
                 .build();
     }
 
-
-    @Bean
-    public PlatformTransactionManager restaurantTxManager(
-            LocalContainerEntityManagerFactoryBean restaurantEntityManager) {
-
-        assert restaurantEntityManager.getObject() != null;
-        return new JpaTransactionManager(restaurantEntityManager.getObject());
-    }
 }

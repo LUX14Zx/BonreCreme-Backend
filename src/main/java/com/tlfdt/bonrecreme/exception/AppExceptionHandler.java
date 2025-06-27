@@ -2,6 +2,8 @@ package com.tlfdt.bonrecreme.exception;
 
 import com.tlfdt.bonrecreme.exception.authentication.AuthenticationExceptionHandler;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,12 +11,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
-public class AppExceptionHandler {
+public class AppExceptionHandler extends Exception {
+
+    private static final Logger logger = LoggerFactory.getLogger(AppExceptionHandler.class);
+
 
     @ExceptionHandler(value = CustomExceptionHandler.class)
     public final ResponseEntity<?> handleCustomException(CustomExceptionHandler exception){

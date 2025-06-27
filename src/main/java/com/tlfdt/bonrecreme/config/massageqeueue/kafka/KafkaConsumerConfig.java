@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.config.MassageQueue.Kafka;
+package com.tlfdt.bonrecreme.config.massageqeueue.kafka;
 
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;

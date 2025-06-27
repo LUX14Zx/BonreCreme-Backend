@@ -4,4 +4,6 @@ import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.BillResponseDTO;
 
 public interface BillService {
     BillResponseDTO checkoutBillTable(Long tableId);
+    BillResponseDTO processPayment(Long billId);
+    BillResponseDTO getBillForTable(Long tableId);
 }

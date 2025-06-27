@@ -1,5 +1,7 @@
 package com.tlfdt.bonrecreme.service.bill;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.BillResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 import com.tlfdt.bonrecreme.model.restaurant.*;
@@ -9,8 +11,11 @@ import com.tlfdt.bonrecreme.repository.restaurant.BillRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.MenuItemRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.OrderRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.SeatTableRepository;
+import com.tlfdt.bonrecreme.service.order.masseging.KafkaProducerService;
 import com.tlfdt.bonrecreme.utils.bill.GetBill;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +27,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BillServiceImpl implements BillService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BillServiceImpl.class);
+
+
     private final BillRepository billRepository;
     private final OrderRepository orderRepository;
     private final MenuItemRepository menuItemRepository;
     private final SeatTableRepository seatTableRepository;
+    private final KafkaProducerService kafkaProducerService;
+    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional("restaurantTransactionManager")
@@ -100,4 +110,38 @@ public class BillServiceImpl implements BillService {
                 .price(orderItem.getMenuItem().getPrice())
                 .build();
     }
+
+    @Override
+    @Transactional("restaurantTransactionManager")
+    public BillResponseDTO processPayment(Long billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new CustomExceptionHandler("Bill not found with id: " + billId));
+
+        bill.setStatus(BillStatus.PAID);
+
+        for (Order order : bill.getOrders()) {
+            order.setStatus(OrderStatus.PAID);
+        }
+
+        Bill paidBill = billRepository.save(bill);
+        BillResponseDTO billResponseDTO = toBillResponseDTO(paidBill);
+
+        try {
+            String billMessage = objectMapper.writeValueAsString(billResponseDTO);
+            kafkaProducerService.sendMessage("paid-bills-topic", billMessage);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Error serializing bill to JSON", e);
+        }
+
+        return billResponseDTO;
+    }
+
+    @Override
+    @Transactional(value = "restaurantTransactionManager", readOnly = true)
+    public BillResponseDTO getBillForTable(Long tableId) {
+        Bill bill = billRepository.findFirstBySeatTable_IdAndStatusOrderByCreatedAtDesc(tableId, BillStatus.PENDING)
+                .orElseThrow(() -> new CustomExceptionHandler("No pending bill found for table with id: " + tableId));
+        return toBillResponseDTO(bill);
+    }
+
 }

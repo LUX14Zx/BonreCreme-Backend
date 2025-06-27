@@ -5,6 +5,11 @@ spring:
       enabled: false
 
   datasource:
+    users:
+      url: jdbc:postgresql://localhost:5432/user_db
+      username: chef
+      password: chef_pass
+      driver-class-name: org.postgresql.Driver
     restaurant:
       url: jdbc:postgresql://localhost:5432/restaurant_db
       username: chef
