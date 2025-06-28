@@ -6,8 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class BonreCremeApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void testStart() {
+		System.out.println("✅ : Testing Spring Boot context startup...");
+	}
 
 }
