@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +38,11 @@ public class AppExceptionHandler {
         return  err;
     }
     public static Exception throwException(String message, Exception err) {
+        log.error(message, err);
+        return  err;
+    }
+
+    public static IOException throwException(String message, IOException err) {
         log.error(message, err);
         return  err;
     }

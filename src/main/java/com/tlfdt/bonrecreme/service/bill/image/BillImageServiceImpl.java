@@ -88,7 +88,7 @@ public class BillImageServiceImpl implements BillImageService {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(image, "png", baos);
             return baos.toByteArray();
-        } catch (Exception e) {
+        } catch (IOException e) {
             // Handle exception
             throw AppExceptionHandler.throwException("Error generating bill image", e);
         }

@@ -2,13 +2,11 @@ package com.tlfdt.bonrecreme.config.cache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.tlfdt.bonrecreme.config.cache.mixin.PageImplMixin;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
@@ -24,7 +22,7 @@ import java.util.Objects;
 @Configuration
 public class RedisCacheConfig {
 
-    @Value("${cache.default.ttl:3600}")
+    @Value("${cache.default.ttl}")
     private long defaultTtlSeconds;
 
     /**
@@ -38,7 +36,6 @@ public class RedisCacheConfig {
     public ObjectMapper redisObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.addMixIn(PageImpl.class, PageImplMixin.class);
 
         // The problematic default typing has been removed to avoid conflicts
         // with the default ObjectMapper used for HTTP message conversion.
