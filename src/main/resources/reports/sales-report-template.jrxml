@@ -8,9 +8,11 @@
               uuid="3a3e7e2c-2b6a-4b0a-8a4e-1b4a682c7e8f">
     <style name="ColumnHeader" mode="Opaque" backcolor="#D3D3D3" hTextAlign="Center" vTextAlign="Middle" fontName="SansSerif" fontSize="11" isBold="true"/>
     <style name="Detail" hTextAlign="Center" vTextAlign="Middle" fontName="SansSerif" fontSize="10"/>
+    <style name="Total" hTextAlign="Right" vTextAlign="Middle" fontName="SansSerif" fontSize="12" isBold="true"/>
 
     <parameter name="ReportTitle" class="java.lang.String"/>
     <parameter name="MonthYear" class="java.lang.String"/>
+    <parameter name="TotalSales" class="java.math.BigDecimal"/>
     <queryString>
         <![CDATA[]]>
     </queryString>
@@ -87,4 +89,23 @@
             </textField>
         </band>
     </detail>
+    <summary>
+        <band height="40">
+            <line>
+                <reportElement x="0" y="5" width="555" height="1" uuid="0a6a3a41-8b29-45a7-86d7-2f3b8a3e4e9f"/>
+            </line>
+            <staticText>
+                <reportElement style="Total" x="300" y="10" width="155" height="30" uuid="b2b3b4d5-e6f7-4890-a1b2-c3d4e5f6a7b8"/>
+                <textElement textAlignment="Right"/>
+                <text><![CDATA[Total Sales:]]></text>
+            </staticText>
+            <textField pattern="¤ #,##0.00">
+                <reportElement style="Total" x="455" y="10" width="100" height="30" uuid="c3d4e5f6-a7b8-4901-b2c3-d4e5f6a7b8c9"/>
+                <textElement textAlignment="Right">
+                    <paragraph rightIndent="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TotalSales}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
 </jasperReport>

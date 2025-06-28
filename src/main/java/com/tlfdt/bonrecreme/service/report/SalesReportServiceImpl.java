@@ -118,12 +118,21 @@ public class SalesReportServiceImpl implements SalesReportService {
         List<Map<String, Object>> billMaps = paidBills.stream()
                 .map(this::convertBillToMap)
                 .collect(Collectors.toList());
+
+
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(billMaps);
 
         // 3. Set report parameters
+
+        // Calculate total sales
+        BigDecimal totalSales = paidBills.stream()
+                .map(Bill::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("ReportTitle", "Monthly Sales Report");
         parameters.put("MonthYear", Month.of(month).name() + " " + year);
+        parameters.put("TotalSales", totalSales);
 
         // 4. Fill the report
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
