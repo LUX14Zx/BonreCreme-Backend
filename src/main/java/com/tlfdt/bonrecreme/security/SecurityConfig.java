@@ -1,6 +1,7 @@
 package com.tlfdt.bonrecreme.security;
 
 import com.tlfdt.bonrecreme.security.jwt.JwtAuthenticationFilter;
+import com.tlfdt.bonrecreme.service.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
@@ -36,11 +38,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // The .cors() configuration has been removed from here
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize ->
-                        authorize
+                        authorize.requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v1/customer/**").permitAll()
                                 .requestMatchers("/api/v1/manager/**").hasRole("MANAGER")
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
