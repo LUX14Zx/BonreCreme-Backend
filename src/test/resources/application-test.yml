@@ -1,27 +1,107 @@
+# ===================================================================
+# SERVER CONFIGURATION
+# ===================================================================
+server:
+  port: 8080
+
+# ===================================================================
+# SPRING BOOT CONFIGURATION
+# ===================================================================
 spring:
+  application:
+    name: BonreCreme-Restaurant
+  docker:
+    compose:
+      enabled: false
+
+  # --- Primary DataSource Configuration (Conventional Naming) ---
   datasource:
+    # ---  "User" DataSource Configuration ---
     users:
-      url: jdbc:h2:mem:users_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      username: sa
-      password: 
-      driver-class-name: org.h2.Driver
+      url: jdbc:postgresql://localhost:5432/user_db
+      username: bonrecreme
+      password: bonrecremepassword
+      driver-class-name: org.postgresql.Driver
+    # ---  "Restaurant" DataSource Configuration ---
     restaurant:
-      url: jdbc:h2:mem:restaurant_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      username: sa
-      password: 
-      driver-class-name: org.h2.Driver
-  
+      url: jdbc:postgresql://localhost:5432/restaurant_db
+      username: bonrecreme
+      password: bonrecremepassword
+      driver-class-name: org.postgresql.Driver
+
+  # --- JPA & Hibernate Settings ---
   jpa:
+    hibernate:
+      ddl-auto: update # Use "validate" or "none" in production
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        show_sql: true
-    hibernate:
-      ddl-auto: create-drop
-    open-in-view: false
-  
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    show-sql: true
+
+  # --- Redis Configuration ---
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      # password: your-redis-password # Uncomment if needed
+
+  # --- Cache Configuration ---
+  cache:
+    type: redis # Specifies the cache provider
+
+  # --- Kafka Configuration ---
+  kafka:
+    # Corrected for local development. Use "kafka:9092" only when running in Docker.
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: group_id
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # Use JsonDeserializer for values
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        # Correctly nested property for trusted packages.
+        # Added the package for BillResponseDTO to prevent future errors.
+        spring.json.trusted.packages: "com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto,com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill,com.tlfdt.bonrecreme.service.report"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # Use JsonSerializer for values
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  report:
+    bill-image:
+      width: 350 # Overrides the default width of 300
+      template-name: "bill-template"
+# ===================================================================
+# APPLICATION-SPECIFIC CONFIGURATION
+# ===================================================================
+
+# --- Custom Cache TTL Configuration ---
+cache:
+  default:
+    # Default Time-to-live (TTL) for cache entries in seconds.
+    # For example: 3600 = 1 hour, 86400 = 1 day
+    ttl: 3600
+
+# --- Json Web Token (JWT) Configuration ---
+jwt:
+  # Example: secret: ${JWT_SECRET}
+  secret: |
+    678e34f0f0987e80d7a917135d8f26e41e4db57ba2ca9f0c789b3bbb4ecffc9e24d6cb9c47d572fcb8e65b8dc76f6acf9e9ddb8240bed9194054a888ed9f6ee19737784570bb2e973b525c9cfa7d7541f7be096ce023e613342e05aca7b8c6bd87946db9c465b34312ab0addd10e0a13d6e6ebb5ac76abaaf47e9ae1e7c6fd04027aa5a9dd5e349c628666e4c9feb4675a2267f9f07d367ed5a96c1cc0246917251b51f4902beed7fb29de01ce69ede92208bdbe44a22979f193a5c098540c4db60b0517238e3c6554075e44f8384c5b0fca20af527ad43efd64c9438891c506290943fbc3d9832dc38dde359f21626212111777f2aacce15c6bc029d66985fd
+  expirationMilliSecond: 86400000 # Equivalent to 24 hours
+
+# ===================================================================
+# LOGGING CONFIGURATION
+# ===================================================================
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG # Enable detailed security logging for development
+
+# ===================================================================
+# Server Sent Event CONFIGURATION
+# ===================================================================
+application:
+  sse:
+    heartbeat-interval-seconds: 25 # Example: Overrides the default of 20
