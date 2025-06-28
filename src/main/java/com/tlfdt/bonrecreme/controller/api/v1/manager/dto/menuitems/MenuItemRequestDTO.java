@@ -43,9 +43,5 @@ public class MenuItemRequestDTO implements Serializable {
     @JsonProperty("price")
     BigDecimal price;
 
-    public MenuItemRequestDTO() {
-        this.name = null;
-        this.description = null;
-        this.price = null;
-    }
+    
 }
