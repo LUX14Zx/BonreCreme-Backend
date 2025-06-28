@@ -1,6 +1,6 @@
 package com.tlfdt.bonrecreme.controller.api.v1.kitchen.view;
 
-import com.tlfdt.bonrecreme.service.kitchen.KitchenDisplayService;
+import com.tlfdt.bonrecreme.service.kitchen.KitchenSseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 public class KitchenSseController {
 
-    private final KitchenDisplayService kitchenDisplayService;
+    private final KitchenSseService kitchenSseService;
 
     /**
      * Establishes an SSE connection to stream order notifications.
@@ -27,6 +27,6 @@ public class KitchenSseController {
      */
     @GetMapping("/stream")
     public SseEmitter streamOrders() {
-        return kitchenDisplayService.createEmitter();
+        return kitchenSseService.createEmitter();
     }
 }

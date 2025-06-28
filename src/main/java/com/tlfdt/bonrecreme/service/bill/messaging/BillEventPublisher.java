@@ -31,7 +31,7 @@ public class BillEventPublisher {
             log.info("Successfully published 'bill-paid' event for bill ID: {}", billResponseDTO.getBillId());
         } catch (JsonProcessingException e) {
             log.error("Error serializing paid bill DTO to JSON for bill ID: {}", billResponseDTO.getBillId(), e);
-            // In a real application, you might publish to a dead-letter queue here.
+            // In a real application, might publish to a dead-letter queue here.
         }
     }
 }

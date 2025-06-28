@@ -26,6 +26,22 @@ import java.util.stream.Collectors;
 public class AppExceptionHandler {
 
     /**
+     * Handles All Exceptions, RuntimeException and Throwable
+     */
+    public static Throwable throwException(String message, Throwable err) {
+        log.error(message, err);
+        return err;
+    }
+    public static RuntimeException throwException(String message, RuntimeException err) {
+        log.error(message, err);
+        return  err;
+    }
+    public static Exception throwException(String message, Exception err) {
+        log.error(message, err);
+        return  err;
+    }
+
+    /**
      * Handles exceptions for when a resource is not found.
      * This allows us to return a more specific 404 Not Found status. It's placed
      * before the more generic CustomExceptionHandler to ensure it's caught first.
@@ -34,7 +50,7 @@ public class AppExceptionHandler {
      * @return A ResponseEntity with a 404 Not Found status.
      */
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponseDTO<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+    public static ResponseEntity<ApiResponseDTO<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
         log.warn("Resource not found: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -48,7 +64,7 @@ public class AppExceptionHandler {
      * @return A ResponseEntity with a 401 Unauthorized status.
      */
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiResponseDTO<Object>> handleBadCredentialsException(BadCredentialsException ex) {
+    public static ResponseEntity<ApiResponseDTO<Object>> handleBadCredentialsException(BadCredentialsException ex) {
         log.warn("Authentication failed: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -63,7 +79,7 @@ public class AppExceptionHandler {
      * @return A ResponseEntity with a 400 Bad Request status and a standardized error message.
      */
     @ExceptionHandler(CustomExceptionHandler.class)
-    public ResponseEntity<ApiResponseDTO<Object>> handleCustomException(CustomExceptionHandler ex) {
+    public static ResponseEntity<ApiResponseDTO<Object>> handleCustomException(CustomExceptionHandler ex) {
         log.warn("Business logic exception: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -79,7 +95,7 @@ public class AppExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ApiResponseDTO<Object>> handleConstraintViolationException(ConstraintViolationException ex) {
+    public static ResponseEntity<ApiResponseDTO<Object>> handleConstraintViolationException(ConstraintViolationException ex) {
         String message = ex.getConstraintViolations().stream()
                 .map(cv -> cv.getPropertyPath() + ": " + cv.getMessage())
                 .collect(Collectors.joining(", "));
@@ -98,7 +114,7 @@ public class AppExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ApiResponseDTO<Object>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+    public static ResponseEntity<ApiResponseDTO<Object>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
@@ -118,10 +134,10 @@ public class AppExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ApiResponseDTO<Object>> handleAllUncaughtException(Exception ex) {
+    public static ResponseEntity<ApiResponseDTO<Object>> handleAllUncaughtException(Exception ex) {
         log.error("An unexpected error occurred", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponseDTO.error("An unexpected internal server error occurred. Please try again later."));
+                .body(ApiResponseDTO.error("An unexpected internal server error occurred. Try again later."));
     }
 }

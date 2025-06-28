@@ -2,6 +2,7 @@ package com.tlfdt.bonrecreme.service.bill.image;
 
 import com.tlfdt.bonrecreme.config.properties.BillImageProperties;
 import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.BillResponseDTO;
+import com.tlfdt.bonrecreme.exception.AppExceptionHandler;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 import com.tlfdt.bonrecreme.exception.resource.ResourceNotFoundException;
 import com.tlfdt.bonrecreme.service.bill.BillService;
@@ -89,7 +90,7 @@ public class BillImageServiceImpl implements BillImageService {
             return baos.toByteArray();
         } catch (Exception e) {
             // Handle exception
-            throw new RuntimeException("Error generating bill image", e);
+            throw AppExceptionHandler.throwException("Error generating bill image", e);
         }
     }
 

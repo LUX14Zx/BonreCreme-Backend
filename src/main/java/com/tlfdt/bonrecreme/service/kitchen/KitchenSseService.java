@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class KitchenDisplayService {
+public class KitchenSseService {
 
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

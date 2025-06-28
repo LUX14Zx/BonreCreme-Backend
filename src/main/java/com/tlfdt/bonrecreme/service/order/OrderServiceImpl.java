@@ -38,7 +38,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final SeatTableRepository seatTableRepository;
     private final KafkaProducerService kafkaProducerService;
-    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional("restaurantTransactionManager")
@@ -78,11 +77,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.PENDING); // Reset status to PENDING after update
         Order savedOrder = orderRepository.save(order);
 
-        OrderNotificationDTO notificationDTO = OrderNotificationDTO.fromOrder(savedOrder);
-        publishOrderNotification("update-order-topic", notificationDTO);
-
-        log.info("Successfully updated items for Order #{}", savedOrder.getId());
-        return notificationDTO;
+        return OrderNotificationDTO.fromOrder(savedOrder);
     }
 
     @Override
