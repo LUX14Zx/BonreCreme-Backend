@@ -2,6 +2,7 @@ package com.tlfdt.bonrecreme.controller.api.v1.kitchen.view;
 
 import com.tlfdt.bonrecreme.service.kitchen.KitchenSseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,7 @@ public class KitchenSseController {
      * @return An SseEmitter instance that manages the persistent connection.
      */
     @GetMapping("/stream")
+    @CrossOrigin(origins = "http://localhost:5174")
     public SseEmitter streamOrders() {
         return kitchenSseService.createEmitter();
     }

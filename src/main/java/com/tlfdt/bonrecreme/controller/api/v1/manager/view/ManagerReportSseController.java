@@ -2,6 +2,7 @@ package com.tlfdt.bonrecreme.controller.api.v1.manager.view;
 
 import com.tlfdt.bonrecreme.service.report.sse.ReportSseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RestController
 @RequestMapping("/api/v1/manager/reports")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ManagerReportSseController {
 
     private final ReportSseService reportSseService;
@@ -25,6 +27,7 @@ public class ManagerReportSseController {
      * @return An SseEmitter instance that manages the persistent connection for a client.
      */
     @GetMapping("/stream")
+    @CrossOrigin
     public SseEmitter streamReportEvents() {
         return reportSseService.createEmitter();
     }
