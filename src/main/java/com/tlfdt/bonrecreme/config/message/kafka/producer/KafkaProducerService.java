@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.service.order.massaging;
+package com.tlfdt.bonrecreme.config.message.kafka.producer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

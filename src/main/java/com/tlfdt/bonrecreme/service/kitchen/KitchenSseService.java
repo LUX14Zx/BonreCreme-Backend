@@ -58,31 +58,7 @@ public class KitchenSseService {
         return emitter;
     }
 
-    /**
-     * Listens for new order events from the "order-topic" on Kafka.
-     * The listener is configured to automatically deserialize the JSON message
-     * into an OrderNotificationDTO object.
-     *
-     * @param order The deserialized order notification from Kafka.
-     */
-    @KafkaListener(topics = "order-topic", groupId = "kitchen-group")
-    public void consumeNewOrder(OrderNotificationDTO order) {
-        log.info("Consumed new order event from Kafka for Order ID {}", order.getOrderId());
-        sendEventToAllEmitters("new-order", order);
-    }
-
-    /**
-     * Listens for order update events from the "update-order-topic" on Kafka.
-     *
-     * @param order The deserialized order notification from Kafka.
-     */
-    @KafkaListener(topics = "update-order-topic", groupId = "kitchen-group")
-    public void consumeOrderUpdate(OrderNotificationDTO order) {
-        log.info("Consumed order update event from Kafka for Order ID {}", order.getOrderId());
-        sendEventToAllEmitters("update-order", order);
-    }
-
-    private void sendEventToAllEmitters(String eventName, Object data) {
+    public void sendEventToAllEmitters(String eventName, Object data) {
         if (emitters.isEmpty()) {
             return;
         }

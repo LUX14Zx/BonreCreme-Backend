@@ -1,7 +1,5 @@
 package com.tlfdt.bonrecreme.service.order;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tlfdt.bonrecreme.controller.api.v1.customer.dto.MenuRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.OrderNotificationDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto.UpdateOrderRequestDTO;
@@ -16,7 +14,7 @@ import com.tlfdt.bonrecreme.model.restaurant.enums.OrderStatus;
 import com.tlfdt.bonrecreme.repository.restaurant.MenuItemRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.OrderRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.SeatTableRepository;
-import com.tlfdt.bonrecreme.service.order.massaging.KafkaProducerService;
+import com.tlfdt.bonrecreme.config.message.kafka.producer.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,7 @@ package com.tlfdt.bonrecreme.service.bill.messaging;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.BillResponseDTO;
-import com.tlfdt.bonrecreme.service.order.massaging.KafkaProducerService;
+import com.tlfdt.bonrecreme.config.message.kafka.producer.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
