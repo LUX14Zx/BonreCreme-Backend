@@ -1,147 +1,116 @@
 package com.tlfdt.bonrecreme.service.bill;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.BillResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
-import com.tlfdt.bonrecreme.model.restaurant.*;
+import com.tlfdt.bonrecreme.model.restaurant.Bill;
+import com.tlfdt.bonrecreme.model.restaurant.Order;
 import com.tlfdt.bonrecreme.model.restaurant.enums.BillStatus;
 import com.tlfdt.bonrecreme.model.restaurant.enums.OrderStatus;
 import com.tlfdt.bonrecreme.repository.restaurant.BillRepository;
-import com.tlfdt.bonrecreme.repository.restaurant.MenuItemRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.OrderRepository;
-import com.tlfdt.bonrecreme.repository.restaurant.SeatTableRepository;
-import com.tlfdt.bonrecreme.service.order.masseging.KafkaProducerService;
-import com.tlfdt.bonrecreme.utils.bill.GetBill;
+import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.*;
+import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.checkout.*;
+import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.payment.*;
+import com.tlfdt.bonrecreme.utils.bill.BillFactory;
+import com.tlfdt.bonrecreme.utils.bill.mapper.BillMapper;
+import com.tlfdt.bonrecreme.service.bill.messaging.BillEventPublisher;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BillServiceImpl implements BillService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BillServiceImpl.class);
-
 
     private final BillRepository billRepository;
     private final OrderRepository orderRepository;
-    private final MenuItemRepository menuItemRepository;
-    private final SeatTableRepository seatTableRepository;
-    private final KafkaProducerService kafkaProducerService;
-    private final ObjectMapper objectMapper;
+    private final BillFactory billFactory;
+    private final BillMapper billMapper;
+    private final BillEventPublisher billEventPublisher;
 
     @Override
     @Transactional("restaurantTransactionManager")
-    public BillResponseDTO checkoutBillTable(Long tableId) {
-        List<Order> servedOrders = orderRepository.findBySeatTableIdAndStatusAndBillIsNull(tableId, OrderStatus.SERVED);
+    public BillResponseDTO checkoutBillTable(CheckoutRequest request) {
+        // 1. Fetch all data needed in one single, optimized query to prevent N+1
+        List<Order> servedOrders = orderRepository.findUnbilledOrdersForTableWithDetails(
+                request.getTableId(),
+                OrderStatus.SERVED
+        );
 
         if (servedOrders.isEmpty()) {
-            throw new CustomExceptionHandler("No served orders found for table with id: " + tableId);
+            throw new CustomExceptionHandler("No served orders found for table with id: " + request.getTableId());
         }
 
-        SeatTable seatTable = seatTableRepository.findById(tableId)
-                .orElseThrow(() -> new CustomExceptionHandler("SeatTable not found with id: " + tableId));
-
-        BigDecimal totalAmount = BigDecimal.ZERO;
-
-        for (Order orderToBill : servedOrders) {
-            if (orderToBill.getOrderItems() != null) {
-                for (OrderItem item : orderToBill.getOrderItems()) {
-                    MenuItem menuItem = menuItemRepository.findById(item.getMenuItem().getId())
-                            .orElseThrow(() -> new CustomExceptionHandler("MenuItem not found for order item: " + item.getId()));
-                    totalAmount = totalAmount.add(menuItem.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
-                }
-            }
+        // 2. Perform business logic calculations
+        BigDecimal totalAmount = calculateTotalAmount(servedOrders);
+        if (totalAmount.compareTo(BigDecimal.ZERO) == 0) {
+            log.warn("Checkout attempted for table {} with zero total amount.", request.getTableId());
+            // Depending on business rules, you might throw an exception here
         }
-        Bill bill = GetBill.getBill(seatTable, servedOrders, totalAmount);
-        Bill savedBill = billRepository.save(bill);
 
+        // 3. Use the factory to create the entity object
+        Bill bill = billFactory.createPendingBill(servedOrders.getFirst().getSeatTable(), servedOrders, totalAmount);
+
+        // 4. Update the state of related entities
         for (Order order : servedOrders) {
-            order.setBill(savedBill);
+            order.setBill(bill);
             order.setStatus(OrderStatus.BILLED);
-            orderRepository.save(order);
         }
 
-        return toBillResponseDTO(savedBill);
-    }
+        Bill savedBill = billRepository.save(bill);
+        log.info("Checked out bill {} for table {}", savedBill.getId(), request.getTableId());
 
-    private BillResponseDTO toBillResponseDTO(Bill bill) {
-        List<BillResponseDTO.OrderDTO> orderDTOs = bill.getOrders().stream()
-                .map(this::toOrderDTO)
-                .collect(Collectors.toList());
-
-        return BillResponseDTO.builder()
-                .billId(bill.getId())
-                .tableNumber(bill.getSeatTable().getTableNumber())
-                .totalAmount(bill.getTotalAmount())
-                .billTime(bill.getCreatedAt())
-                .isPaid(bill.getStatus() == BillStatus.PAID)
-                .orders(orderDTOs)
-                .build();
-    }
-
-    private BillResponseDTO.OrderDTO toOrderDTO(Order order) {
-        List<BillResponseDTO.OrderItemDTO> orderItemDTOs = order.getOrderItems().stream()
-                .map(this::toOrderItemDTO)
-                .collect(Collectors.toList());
-
-        BigDecimal orderTotal = orderItemDTOs.stream()
-                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return BillResponseDTO.OrderDTO.builder()
-                .orderId(order.getId())
-                .totalPrice(orderTotal)
-                .items(orderItemDTOs)
-                .build();
-    }
-
-    private BillResponseDTO.OrderItemDTO toOrderItemDTO(OrderItem orderItem) {
-        return BillResponseDTO.OrderItemDTO.builder()
-                .name(orderItem.getMenuItem().getName())
-                .quantity(orderItem.getQuantity())
-                .price(orderItem.getMenuItem().getPrice())
-                .build();
+        // 5. Use the mapper to create the response DTO
+        return billMapper.toBillResponseDTO(savedBill);
     }
 
     @Override
     @Transactional("restaurantTransactionManager")
-    public BillResponseDTO processPayment(Long billId) {
-        Bill bill = billRepository.findById(billId)
-                .orElseThrow(() -> new CustomExceptionHandler("Bill not found with id: " + billId));
+    public BillResponseDTO processPayment(PaymentRequest request) {
+        // The findById is sufficient here, but a custom query could fetch orders if needed
+        Bill bill = billRepository.findById(request.getBillId())
+                .orElseThrow(() -> new CustomExceptionHandler("Bill not found with id: " + request.getBillId()));
+
+        if (bill.getStatus() == BillStatus.PAID) {
+            throw new CustomExceptionHandler("Bill with id: " + request.getBillId() + " has already been paid.");
+        }
 
         bill.setStatus(BillStatus.PAID);
-
-        for (Order order : bill.getOrders()) {
-            order.setStatus(OrderStatus.PAID);
-        }
+        bill.getOrders().forEach(order -> order.setStatus(OrderStatus.PAID));
 
         Bill paidBill = billRepository.save(bill);
-        BillResponseDTO billResponseDTO = toBillResponseDTO(paidBill);
+        log.info("Processed payment for bill {}", paidBill.getId());
 
-        try {
-            String billMessage = objectMapper.writeValueAsString(billResponseDTO);
-            kafkaProducerService.sendMessage("paid-bills-topic", billMessage);
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Error serializing bill to JSON", e);
-        }
+        BillResponseDTO billResponseDTO = billMapper.toBillResponseDTO(paidBill);
+
+        // Publish an event that the bill has been paid
+        billEventPublisher.publishBillPaidEvent(billResponseDTO);
 
         return billResponseDTO;
     }
 
     @Override
     @Transactional(value = "restaurantTransactionManager", readOnly = true)
-    public BillResponseDTO getBillForTable(Long tableId) {
-        Bill bill = billRepository.findFirstBySeatTable_IdAndStatusOrderByCreatedAtDesc(tableId, BillStatus.PENDING)
-                .orElseThrow(() -> new CustomExceptionHandler("No pending bill found for table with id: " + tableId));
-        return toBillResponseDTO(bill);
+    public BillResponseDTO getBillForTable(BillRequestDTO request) {
+        Bill bill = billRepository.findMostRecentBillWithDetailsByTableIdAndStatus(request.getTableId(), BillStatus.PENDING)
+                .orElseThrow(() -> new CustomExceptionHandler("No pending bill found for table with id: " + request.getTableId()));
+
+        return billMapper.toBillResponseDTO(bill);
     }
 
+    /**
+     * Calculates the total amount from a list of orders based on the price at the time of the order.
+     */
+    private BigDecimal calculateTotalAmount(List<Order> orders) {
+        return orders.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                // Use getPriceAtTime() for accurate historical pricing
+                .map(item -> item.getPriceAtTime().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

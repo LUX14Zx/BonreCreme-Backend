@@ -1,8 +1,16 @@
+# ===================================================================
+# SERVER CONFIGURATION
+# ===================================================================
 server:
   port: 8080
+
+# ===================================================================
+# SPRING BOOT CONFIGURATION
+# ===================================================================
 spring:
+  # --- Spring Active Profile Configuration ---
   profiles:
     active: dev
   application:
-    name: BonreCreme
+    name: BonreCreme-Restaurant
 

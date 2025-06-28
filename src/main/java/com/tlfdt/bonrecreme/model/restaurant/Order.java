@@ -1,66 +1,81 @@
 package com.tlfdt.bonrecreme.model.restaurant;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.tlfdt.bonrecreme.model.restaurant.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * Represents a customer's order, containing one or more menu items.
+ * This entity is a central part of the domain, connecting tables, items, and bills.
+ */
 @Entity
 @Table(name = "orders")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Order {
 
-    /**
-     * The unique identifier for the order.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The table where the order was placed.
-     * The 'referencedColumnName' is explicitly set to 'id' to resolve potential mapping ambiguity.
-     */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seat_table_id", referencedColumnName = "table_id")
-    @JsonManagedReference
-    @JsonBackReference
+    @JoinColumn(name = "seat_table_id", nullable = false)
     private SeatTable seatTable;
 
-    /**
-     * The bill that this order is a part of. This can be null if the order has not been billed yet.
-     */
+    @OneToMany(
+            mappedBy = "order",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true, // This is the magic!
+            fetch = FetchType.EAGER // Often useful to fetch order items with the order
+    )
+    @Builder.Default
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private OrderStatus status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bill_id")
     private Bill bill;
 
-    /**
-     * The list of items included in this order.
-     * 'orphanRemoval = true' ensures that if an OrderItem is removed from this list, it's also deleted from the database.
-     */
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @JsonBackReference
-    private List<OrderItem> orderItems;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private LocalDateTime createdAt;
 
-    /**
-     * The current status of the order (e.g., PENDING, SERVED).
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private OrderStatus status;
+    // == Helper methods for managing the bidirectional relationship ==
+
+    public void addOrderItem(OrderItem orderItem) {
+        this.orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+    public void removeOrderItem(OrderItem orderItem) {
+        this.orderItems.remove(orderItem);
+        orderItem.setOrder(null);
+    }
+
+    // == Custom equals and hashCode for safe use in collections ==
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return id != null ? id.equals(order.id) : Objects.equals(createdAt, order.createdAt) && Objects.equals(seatTable, order.seatTable);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : getClass().hashCode();
+    }
 }

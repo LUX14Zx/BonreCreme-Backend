@@ -9,14 +9,13 @@ networks:
 volumes:
   restaurant_db:
   kafka_data:
+  redis_cache:
 
 services:
-  bonrecreme:
+  backend:
     build: .
     ports:
       - "8080:8080"
-    env_file:
-      - .env
     networks:
       - db
       - cache
@@ -25,9 +24,9 @@ services:
   postgres:
     image: 'postgres:latest'
     environment:
-      - 'POSTGRES_DB=restaurant_db'
-      - 'POSTGRES_USER=chef'
-      - 'POSTGRES_PASSWORD=chef_pass'
+      - POSTGRES_DB=restaurant_db
+      - POSTGRES_USER=chef
+      - POSTGRES_PASSWORD=chef_pass
     ports:
       - '5432:5432'
     networks:
@@ -38,6 +37,10 @@ services:
     image: 'redis:latest'
     ports:
       - '6379:6379'
+
+    volumes:
+      - redis_cache:/cache
+
     networks:
       - cache
 
