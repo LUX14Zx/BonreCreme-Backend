@@ -7,7 +7,9 @@ import com.tlfdt.bonrecreme.model.restaurant.enums.BillStatus;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A factory component responsible for creating {@link Bill} instances.
@@ -30,13 +32,16 @@ public class BillFactory {
      * @param totalAmount  The calculated total amount for all orders.
      * @return A new, unsaved {@link Bill} entity.
      */
-    public Bill createPendingBill(SeatTable seatTable, List<Order> servedOrders, BigDecimal totalAmount) {
+    /**
+     * Creates a new Bill instance with a PENDING status.
+     */
+    public Bill createPendingBill(SeatTable seatTable, Set<Order> servedOrders, BigDecimal totalAmount) {
         return Bill.builder()
                 .seatTable(seatTable)
-                .orders(servedOrders)
+                .orders(new HashSet<>(servedOrders)) // Convert the list to a HashSet
                 .totalAmount(totalAmount)
                 .status(BillStatus.PENDING)
-                .paymentMethod("Cash") // A default value
+                .paymentMethod("Cash")
                 .build();
     }
 }

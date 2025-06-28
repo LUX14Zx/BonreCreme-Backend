@@ -1,5 +1,6 @@
-package com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table;
+package com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
 import jakarta.validation.constraints.NotNull;
@@ -21,8 +22,8 @@ public class TableRequestDTO implements Serializable {
     /**
      * The unique number assigned to the table. Must be a positive integer.
      */
-    @NotNull(message = "Table number cannot be null.")
-    @Positive(message = "Table number must be a positive integer.")
+    @NotNull(message = "table number cannot be null.")
+    @Positive(message = "table number must be a positive integer.")
     @JsonProperty("table_number")
     Integer tableNumber;
 
@@ -41,4 +42,14 @@ public class TableRequestDTO implements Serializable {
      */
     @JsonProperty("status")
     TableStatus status;
+
+    @JsonCreator
+    public TableRequestDTO(
+            @JsonProperty("table_number") Integer tableNumber,
+            @JsonProperty("seating_capacity") Integer seatingCapacity,
+            @JsonProperty("status") TableStatus status) {
+        this.tableNumber = tableNumber;
+        this.seatingCapacity = seatingCapacity;
+        this.status = status;
+    }
 }

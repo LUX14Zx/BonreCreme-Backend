@@ -22,7 +22,6 @@ public class KafkaProducerService {
 
     /**
      * The KafkaTemplate is configured to handle Object serialization.
-     * See {@link com.tlfdt.bonrecreme.config.message.kafka.KafkaProducerConfig}.
      */
     private final KafkaTemplate<String, Object> kafkaTemplate;
 

@@ -1,7 +1,7 @@
 package com.tlfdt.bonrecreme.service.table;
 
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableRequestDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 import com.tlfdt.bonrecreme.model.restaurant.SeatTable;
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
@@ -13,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service implementation for managing restaurant tables.
@@ -50,11 +53,13 @@ public class SeatTableServiceImpl implements SeatTableService {
 
     @Override
     @Transactional(value = "restaurantTransactionManager", readOnly = true)
-    public Page<TableResponseDTO> getAllTables(Pageable pageable) {
-        log.info("Fetching all tables for page request: {}", pageable);
-        Page<SeatTable> tablesPage = tableRepository.findAll(pageable);
-        // Use the mapper to convert the Page of entities to a Page of DTOs
-        return tablesPage.map(tableMapper::toResponseDTO);
+    public List<TableResponseDTO> getAllTables() {
+        log.info("Fetching all tables");
+        List<SeatTable> tables = tableRepository.findAll();
+        // Convert the List of entities to a Stream, then map to DTOs and collect into a new List.
+        return tables.stream()
+                .map(tableMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -102,6 +107,6 @@ public class SeatTableServiceImpl implements SeatTableService {
      */
     private SeatTable findTableById(Long id) {
         return tableRepository.findById(id)
-                .orElseThrow(() -> new CustomExceptionHandler("Table not found with ID: " + id));
+                .orElseThrow(() -> new CustomExceptionHandler("table not found with ID: " + id));
     }
 }

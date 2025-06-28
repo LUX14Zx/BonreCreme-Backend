@@ -79,7 +79,7 @@ public class SalesReportServiceImpl implements SalesReportService {
         log.info("Generating CSV sales report for {} paid bills.", paidBills.size());
         StringBuilder csvBuilder = new StringBuilder();
         // Header
-        csvBuilder.append("Bill ID,Date,Table Number,Total Amount\n");
+        csvBuilder.append("Bill ID,Date,table Number,Total Amount\n");
 
         // Data Rows
         BigDecimal totalRevenue = BigDecimal.ZERO;

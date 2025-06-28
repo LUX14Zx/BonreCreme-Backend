@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,8 +35,8 @@ public class Bill {
     private SeatTable seatTable;
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default // Ensures the list is initialized when using the builder
-    private List<Order> orders = new ArrayList<>();
+    @Builder.Default // Ensures the set is initialized when using the builder
+    private Set<Order> orders = new HashSet<>();
 
     @Column(name = "total_amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal totalAmount;

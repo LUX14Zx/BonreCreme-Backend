@@ -1,7 +1,7 @@
 package com.tlfdt.bonrecreme.utils.menu.mapper;
 
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemRequestDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemResponseDTO;
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
 import org.springframework.stereotype.Component;
 
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 public class MenuItemMapper {
 
     /**
-     * Converts a MenuItem entity to a MenuItemResponseDTO.
+     * Converts a menuitems entity to a MenuItemResponseDTO.
      *
-     * @param menuItem The MenuItem entity.
+     * @param menuItem The menuitems entity.
      * @return The corresponding MenuItemResponseDTO.
      */
     public MenuItemResponseDTO toResponseDTO(MenuItem menuItem) {
@@ -19,10 +19,10 @@ public class MenuItemMapper {
     }
 
     /**
-     * Creates a new MenuItem entity from a MenuItemRequestDTO.
+     * Creates a new menuitems entity from a MenuItemRequestDTO.
      *
      * @param requestDTO The DTO containing the data for the new item.
-     * @return A new MenuItem entity.
+     * @return A new menuitems entity.
      */
     public MenuItem toNewEntity(MenuItemRequestDTO requestDTO) {
         return MenuItem.builder()
@@ -33,7 +33,7 @@ public class MenuItemMapper {
     }
 
     /**
-     * Updates an existing MenuItem entity with data from a MenuItemRequestDTO.
+     * Updates an existing menuitems entity with data from a MenuItemRequestDTO.
      *
      * @param menuItem   The existing entity to update.
      * @param requestDTO The DTO containing the new data.

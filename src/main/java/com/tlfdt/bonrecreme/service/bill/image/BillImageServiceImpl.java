@@ -3,6 +3,7 @@ package com.tlfdt.bonrecreme.service.bill.image;
 import com.tlfdt.bonrecreme.config.properties.BillImageProperties;
 import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.BillResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
+import com.tlfdt.bonrecreme.exception.resource.ResourceNotFoundException;
 import com.tlfdt.bonrecreme.service.bill.BillService;
 import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.BillRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.image.BillImageRequest;
@@ -14,16 +15,14 @@ import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.swing.Java2DRenderer;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * A service implementation for generating PNG images of customer bills.
- * <p>
- * This implementation uses the Thymeleaf template engine to process an HTML template,
- * which is then rendered into an image using the Flying Saucer (XHTMLRenderer) library.
- * This approach is server-safe, configurable, and separates presentation from logic.
+ * A service implementation for generating JPEG images of customer bills.
  */
 @Service
 @RequiredArgsConstructor
@@ -32,56 +31,66 @@ public class BillImageServiceImpl implements BillImageService {
 
     private final BillService billService;
     private final TemplateEngine templateEngine;
-    private final BillImageProperties billImageProperties; // Inject configuration
+    private final BillImageProperties billImageProperties;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public byte[] generateBillImage(BillImageRequest request) {
         try {
-            // 1. Fetch the bill data using the DTO-based service method
             BillRequestDTO billRequest = BillRequestDTO.builder().tableId(request.getTableId()).build();
             BillResponseDTO bill = billService.getBillForTable(billRequest);
 
-            // 2. Prepare the data model for the template
             Context context = new Context();
             context.setVariable("bill", bill);
 
-            // 3. Process the HTML template with the data model
             String htmlContent = templateEngine.process(billImageProperties.getTemplateName(), context);
+            log.info("Generated HTML for bill image:\n{}", htmlContent);
 
-            // 4. Render the processed HTML to an image
-            return renderHtmlToPng(htmlContent);
+            return renderHtmlToImage(htmlContent);
 
-        } catch (IOException e) {
-            log.error("Failed to generate bill image for table ID: {}", request.getTableId(), e);
-            throw new CustomExceptionHandler("Error generating bill image. Please try again.");
+        } catch (ResourceNotFoundException e) {
+            // Re-throw the exception to be handled by the global exception handler.
+            // This will ensure a proper HTTP 404 Not Found response is sent to the client
+            // when a bill for the specified table does not exist.
+            throw e;
         } catch (CustomExceptionHandler e) {
-            // Re-throw known business exceptions to be handled by the controller advice
             throw e;
         } catch (Exception e) {
             log.error("An unexpected error occurred while generating bill image for table ID: {}", request.getTableId(), e);
-            throw new CustomExceptionHandler("An unexpected system error occurred.");
+            throw new CustomExceptionHandler("An unexpected system error occurred while generating the bill image.");
         }
     }
 
     /**
-     * Renders a string of well-formed XHTML into a PNG byte array.
+     * Renders a string of well-formed XHTML into a JPEG byte array.
+     * This method correctly handles transparency to prevent a black background in the final JPEG.
      *
      * @param xhtmlContent The XHTML string to render.
-     * @return A byte array containing the PNG image data.
+     * @return A byte array containing the JPEG image data.
      * @throws IOException if there is an error during image processing.
      */
-    private byte[] renderHtmlToPng(String xhtmlContent) throws IOException {
-        // Use the configured width from application.yml
-        int imageWidth = billImageProperties.getWidth();
-        Java2DRenderer renderer = new Java2DRenderer(xhtmlContent, imageWidth);
-        BufferedImage image = renderer.getImage();
+    private byte[] renderHtmlToImage(String xhtmlContent) throws IOException {
+        try {
+            JEditorPane editorPane = new JEditorPane();
+            editorPane.setEditable(false);
+            editorPane.setContentType("text/html");
+            editorPane.setText(xhtmlContent);
 
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            // Give the component a size
+            Dimension preferredSize = editorPane.getPreferredSize();
+            editorPane.setSize(preferredSize);
+
+            BufferedImage image = new BufferedImage(preferredSize.width, preferredSize.height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = image.createGraphics();
+            editorPane.print(g2d);
+            g2d.dispose();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(image, "png", baos);
             return baos.toByteArray();
+        } catch (Exception e) {
+            // Handle exception
+            throw new RuntimeException("Error generating bill image", e);
         }
     }
+
 }

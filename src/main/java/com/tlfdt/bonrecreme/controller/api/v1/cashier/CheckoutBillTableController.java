@@ -33,11 +33,11 @@ public class CheckoutBillTableController {
      * @return A ResponseEntity containing the bill image as a byte array.
      */
     @GetMapping(
-            path = "/bill/image/{tableId}",
+            path = "/checkout-bill/image/table/{tableId}",
             produces = MediaType.IMAGE_PNG_VALUE
     )
     public ResponseEntity<byte[]> getBillImage(
-            @PathVariable @Positive(message = "Table ID must be a positive number.") Long tableId) {
+            @PathVariable @Positive(message = "table ID must be a positive number.") Long tableId) {
         // Create a BillImageRequest object
         BillImageRequest request = BillImageRequest.builder().tableId(tableId).build();
         byte[] image = billImageService.generateBillImage(request);
@@ -50,9 +50,9 @@ public class CheckoutBillTableController {
      * @param tableId The unique identifier of the table to check out. Must be a positive number.
      * @return An ApiResponseDTO containing the details of the generated bill.
      */
-    @PostMapping("/checkout-bill/{tableId}")
+    @PostMapping("/checkout-bill/table/{tableId}")
     public ResponseEntity<ApiResponseDTO<BillResponseDTO>> checkoutBillForTable(
-            @PathVariable @Positive(message = "Table ID must be a positive number.") Long tableId) {
+            @PathVariable @Positive(message = "table ID must be a positive number.") Long tableId) {
         // Create a CheckoutRequest object
         CheckoutRequest request = CheckoutRequest.builder().tableId(tableId).build();
         BillResponseDTO billTable = billService.checkoutBillTable(request);

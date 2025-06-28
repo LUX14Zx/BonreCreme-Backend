@@ -1,14 +1,12 @@
 package com.tlfdt.bonrecreme.controller.api.v1.manager;
 
 import com.tlfdt.bonrecreme.controller.api.v1.dto.ApiResponseDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemRequestDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemResponseDTO;
 import com.tlfdt.bonrecreme.service.menu.MenuItemService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

@@ -1,7 +1,7 @@
 package com.tlfdt.bonrecreme.controller.api.v1.customer;
 
 import com.tlfdt.bonrecreme.controller.api.v1.dto.ApiResponseDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemResponseDTO;
 import com.tlfdt.bonrecreme.service.menu.MenuItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

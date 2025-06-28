@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem;
+package com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -68,10 +68,10 @@ public class MenuItemResponseDTO implements Serializable {
     }
 
     /**
-     * Constructs a MenuItemResponseDTO from a MenuItem domain entity.
+     * Constructs a MenuItemResponseDTO from a menuitems domain entity.
      * This encapsulates the mapping logic directly within the DTO.
      *
-     * @param menuItem The MenuItem entity to convert.
+     * @param menuItem The menuitems entity to convert.
      */
     public MenuItemResponseDTO(MenuItem menuItem) {
         this.id = menuItem.getId();
@@ -81,10 +81,10 @@ public class MenuItemResponseDTO implements Serializable {
     }
 
     /**
-     * A static factory method to create a MenuItemResponseDTO from a MenuItem entity.
+     * A static factory method to create a MenuItemResponseDTO from a menuitems entity.
      * This provides a clear and convenient way to perform the conversion.
      *
-     * @param menuItem The source MenuItem entity.
+     * @param menuItem The source menuitems entity.
      * @return A new, populated MenuItemResponseDTO.
      */
     public static MenuItemResponseDTO fromMenuItem(MenuItem menuItem) {

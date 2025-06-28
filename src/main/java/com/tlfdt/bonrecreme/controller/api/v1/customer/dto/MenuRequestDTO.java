@@ -28,8 +28,8 @@ public class MenuRequestDTO  {
      * The unique identifier of the table where the order is placed.
      * Must be a positive number.
      */
-    @NotNull(message = "Table ID cannot be null.")
-    @Positive(message = "Table ID must be a positive number.")
+    @NotNull(message = "table ID cannot be null.")
+    @Positive(message = "table ID must be a positive number.")
     Long tableId;
 
     /**

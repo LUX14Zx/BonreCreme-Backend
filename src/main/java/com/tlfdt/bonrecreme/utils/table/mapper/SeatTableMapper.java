@@ -1,7 +1,7 @@
 package com.tlfdt.bonrecreme.utils.table.mapper;
 
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableRequestDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableResponseDTO;
 import com.tlfdt.bonrecreme.model.restaurant.SeatTable;
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
 import org.springframework.stereotype.Component;

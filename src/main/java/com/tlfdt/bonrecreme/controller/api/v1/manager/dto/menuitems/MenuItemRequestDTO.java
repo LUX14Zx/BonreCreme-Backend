@@ -1,4 +1,4 @@
-package com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem;
+package com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.DecimalMin;

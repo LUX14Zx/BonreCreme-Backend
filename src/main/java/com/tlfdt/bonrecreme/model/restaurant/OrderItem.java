@@ -8,7 +8,7 @@ import java.util.Objects;
 
 /**
  * Represents a single line item within an Order. This entity links a specific
- * MenuItem with an Order, along with the quantity and any special requests.
+ * menuitems with an Order, along with the quantity and any special requests.
  */
 @Entity
 @Table(name = "order_items")

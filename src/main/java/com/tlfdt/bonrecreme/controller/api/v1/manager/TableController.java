@@ -1,8 +1,8 @@
 package com.tlfdt.bonrecreme.controller.api.v1.manager;
 
 import com.tlfdt.bonrecreme.controller.api.v1.dto.ApiResponseDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableRequestDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableResponseDTO;
 import com.tlfdt.bonrecreme.service.table.SeatTableService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * REST controller for managing restaurant tables.
@@ -38,7 +40,7 @@ public class TableController {
         TableResponseDTO createdTable = tableService.createTable(requestDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiResponseDTO.success(createdTable, "Table created successfully."));
+                .body(ApiResponseDTO.success(createdTable, "table created successfully."));
     }
 
     /**
@@ -49,22 +51,20 @@ public class TableController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<TableResponseDTO>> getTableById(
-            @PathVariable @Positive(message = "Table ID must be a positive number.") Long id) {
+            @PathVariable @Positive(message = "table ID must be a positive number.") Long id) {
         TableResponseDTO table = tableService.getTableById(id);
-        return ResponseEntity.ok(ApiResponseDTO.success(table, "Table fetched successfully."));
+        return ResponseEntity.ok(ApiResponseDTO.success(table, "table fetched successfully."));
     }
 
     /**
-     * Retrieves a paginated list of all restaurant tables.
+     * Retrieves a list of all restaurant tables.
      *
-     * @param pageable An object that Spring populates from URL parameters like ?page=0&size=10.
-     * @return A standardized API response containing a page of all tables.
+     * @return A standardized API response containing a list of all tables.
      */
     @GetMapping
-    public ResponseEntity<ApiResponseDTO<Page<TableResponseDTO>>> getAllTables(Pageable pageable) {
-        // The service returns a Page, so the variable and response types are updated to Page.
-        Page<TableResponseDTO> tablesPage = tableService.getAllTables(pageable);
-        return ResponseEntity.ok(ApiResponseDTO.success(tablesPage, "All tables fetched successfully."));
+    public ResponseEntity<ApiResponseDTO<List<TableResponseDTO>>> getAllTables() {
+        List<TableResponseDTO> tablesList = tableService.getAllTables();
+        return ResponseEntity.ok(ApiResponseDTO.success(tablesList, "All tables fetched successfully."));
     }
 
     /**
@@ -76,10 +76,10 @@ public class TableController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<TableResponseDTO>> updateTable(
-            @PathVariable @Positive(message = "Table ID must be a positive number.") Long id,
+            @PathVariable @Positive(message = "table ID must be a positive number.") Long id,
             @Valid @RequestBody TableRequestDTO requestDTO) {
         TableResponseDTO updatedTable = tableService.updateTable(id, requestDTO);
-        return ResponseEntity.ok(ApiResponseDTO.success(updatedTable, "Table updated successfully."));
+        return ResponseEntity.ok(ApiResponseDTO.success(updatedTable, "table updated successfully."));
     }
 
     /**
@@ -90,8 +90,8 @@ public class TableController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<Void>> deleteTable(
-            @PathVariable @Positive(message = "Table ID must be a positive number.") Long id) {
+            @PathVariable @Positive(message = "table ID must be a positive number.") Long id) {
         tableService.deleteTable(id);
-        return ResponseEntity.ok(ApiResponseDTO.success("Table deleted successfully."));
+        return ResponseEntity.ok(ApiResponseDTO.success("table deleted successfully."));
     }
 }

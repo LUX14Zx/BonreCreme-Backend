@@ -1,10 +1,12 @@
 package com.tlfdt.bonrecreme.service.table;
 
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableRequestDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.Table.TableResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * A service interface for managing the business logic of restaurant tables.
@@ -40,10 +42,9 @@ public interface SeatTableService {
      * Using pagination is crucial for performance and scalability, preventing the system
      * from loading all tables into memory at once.
      *
-     * @param pageable An object containing pagination (page number, size) and sorting information.
-     * @return A {@link Page} of {@link TableResponseDTO}s.
+     * @return A {@link List} of {@link TableResponseDTO}s.
      */
-    Page<TableResponseDTO> getAllTables(Pageable pageable);
+    List<TableResponseDTO> getAllTables();
 
     /**
      * Updates an existing table with new data.

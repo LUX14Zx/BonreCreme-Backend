@@ -31,7 +31,7 @@ public class PaymentController {
      * @param billId The unique identifier of the bill to be paid. Must be a positive number.
      * @return An ApiResponseDTO containing the details of the paid bill.
      */
-    @PostMapping("/pay/{billId}")
+    @PostMapping("/pay/bill/{billId}")
     public ResponseEntity<ApiResponseDTO<BillResponseDTO>> payBill(
             @PathVariable @Positive(message = "Bill ID must be a positive number.") Long billId) {
 

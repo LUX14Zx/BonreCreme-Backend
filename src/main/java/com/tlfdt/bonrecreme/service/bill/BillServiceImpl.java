@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -53,8 +54,8 @@ public class BillServiceImpl implements BillService {
             // Depending on business rules, you might throw an exception here
         }
 
-        // 3. Use the factory to create the entity object
-        Bill bill = billFactory.createPendingBill(servedOrders.getFirst().getSeatTable(), servedOrders, totalAmount);
+        // 3. Use the factory to create the entity object, converting the List to a Set
+        Bill bill = billFactory.createPendingBill(servedOrders.getFirst().getSeatTable(), new HashSet<>(servedOrders), totalAmount);
 
         // 4. Update the state of related entities
         for (Order order : servedOrders) {

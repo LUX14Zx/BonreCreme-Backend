@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,11 +36,11 @@ public class Order {
     @OneToMany(
             mappedBy = "order",
             cascade = CascadeType.ALL,
-            orphanRemoval = true, // This is the magic!
-            fetch = FetchType.EAGER // Often useful to fetch order items with the order
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
     )
     @Builder.Default
-    private List<OrderItem> orderItems = new ArrayList<>();
+    private Set<OrderItem> orderItems = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

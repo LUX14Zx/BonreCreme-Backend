@@ -9,8 +9,8 @@ import lombok.Value;
 @Value
 @Builder
 public class CheckoutRequest {
-    @NotNull(message = "Table id cannot be null.")
-    @Positive(message = "Table id must be a positive number.")
+    @NotNull(message = "table id cannot be null.")
+    @Positive(message = "table id must be a positive number.")
     @JsonProperty("table_id")
     Long tableId;
 }

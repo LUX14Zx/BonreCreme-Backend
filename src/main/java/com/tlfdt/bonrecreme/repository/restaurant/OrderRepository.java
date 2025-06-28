@@ -40,7 +40,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     /**
      * Finds all unbilled orders for a specific table with a given status.
      * This query is highly optimized using {@code LEFT JOIN FETCH} to retrieve the
-     * {@code Order}, its {@code OrderItem}s, and each {@code OrderItem}'s {@code MenuItem}
+     * {@code Order}, its {@code OrderItem}s, and each {@code OrderItem}'s {@code menuitems}
      * in a single database query. This completely avoids the N+1 problem that would
      * otherwise occur when calculating the bill total, making the checkout process
      * significantly more performant.

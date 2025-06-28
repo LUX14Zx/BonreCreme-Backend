@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,12 +55,12 @@ public class OrderServiceImpl implements OrderService {
         Order savedOrder = orderRepository.save(order);
 
         List<OrderItem> orderItems = createOrderItemsForOrder(menuRequestDTO.getItems(), savedOrder);
-        order.setOrderItems(orderItems); // Set items on the order entity
+        order.setOrderItems(new HashSet<>(orderItems)); // Convert the list to a HashSet
 
         OrderNotificationDTO notificationDTO = OrderNotificationDTO.fromOrder(order);
         publishOrderNotification("order-topic", notificationDTO);
 
-        log.info("Successfully created Order #{} for Table #{}", savedOrder.getId(), table.getTableNumber());
+        log.info("Successfully created Order #{} for table #{}", savedOrder.getId(), table.getTableNumber());
         return notificationDTO;
     }
 
@@ -152,7 +153,7 @@ public class OrderServiceImpl implements OrderService {
         return itemRequests.stream()
                 .map(itemDto -> {
                     MenuItem menuItem = menuItemRepository.findById(itemDto.getMenuItemId())
-                            .orElseThrow(() -> new ResourceNotFoundException("MenuItem not found with id: " + itemDto.getMenuItemId()));
+                            .orElseThrow(() -> new ResourceNotFoundException("menuitems not found with id: " + itemDto.getMenuItemId()));
 
                     return OrderItem.builder()
                             .order(order)

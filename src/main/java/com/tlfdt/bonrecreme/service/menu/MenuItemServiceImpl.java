@@ -1,7 +1,7 @@
 package com.tlfdt.bonrecreme.service.menu;
 
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemRequestDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
 import com.tlfdt.bonrecreme.repository.restaurant.MenuItemRepository;
@@ -47,7 +47,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Cacheable(key = "#id")
     public MenuItemResponseDTO getMenuItemById(Long id) {
         MenuItem menuItem = menuItemRepository.findById(id)
-                .orElseThrow(() -> new CustomExceptionHandler("MenuItem not found with ID: " + id));
+                .orElseThrow(() -> new CustomExceptionHandler("menuitems not found with ID: " + id));
         return menuItemMapper.toResponseDTO(menuItem);
     }
 
@@ -66,7 +66,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     @CacheEvict(cacheNames = "allMenuItems", allEntries = true) // Invalidates the paginated cache
     public MenuItemResponseDTO updateMenuItem(Long id, MenuItemRequestDTO requestDTO) {
         MenuItem menuItem = menuItemRepository.findById(id)
-                .orElseThrow(() -> new CustomExceptionHandler("MenuItem not found with ID: " + id));
+                .orElseThrow(() -> new CustomExceptionHandler("menuitems not found with ID: " + id));
 
         // Use the mapper to apply updates
         menuItemMapper.updateEntityFromDTO(menuItem, requestDTO);
@@ -82,7 +82,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     @CacheEvict(allEntries = true) // Evict both single-item and paginated caches for this item
     public void deleteMenuItem(Long id) {
         if (!menuItemRepository.existsById(id)) {
-            throw new CustomExceptionHandler("MenuItem not found with ID: " + id);
+            throw new CustomExceptionHandler("menuitems not found with ID: " + id);
         }
         menuItemRepository.deleteById(id);
         log.info("Deleted menu item with ID: {}", id);

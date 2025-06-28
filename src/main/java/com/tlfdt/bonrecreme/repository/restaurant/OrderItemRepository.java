@@ -29,7 +29,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     /**
      * Finds all order items associated with a specific order, with pagination.
-     * Eagerly fetches the associated MenuItem to prevent N+1 queries.
+     * Eagerly fetches the associated menuitems to prevent N+1 queries.
      *
      * @param order The {@link Order} entity to find items for.
      * @param pageable Pagination and sorting information.

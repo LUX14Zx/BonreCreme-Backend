@@ -1,9 +1,8 @@
 package com.tlfdt.bonrecreme.service.menu;
 
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemRequestDTO;
-import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.MenuItem.MenuItemResponseDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemRequestDTO;
+import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

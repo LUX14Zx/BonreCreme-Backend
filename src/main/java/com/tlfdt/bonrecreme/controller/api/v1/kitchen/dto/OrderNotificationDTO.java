@@ -1,5 +1,6 @@
 package com.tlfdt.bonrecreme.controller.api.v1.kitchen.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tlfdt.bonrecreme.model.restaurant.Order;
 import com.tlfdt.bonrecreme.model.restaurant.OrderItem;
@@ -37,8 +38,8 @@ public class OrderNotificationDTO implements Serializable {
     /**
      * The number of the table where the order was placed. Must be a positive number.
      */
-    @NotNull(message = "Table number cannot be null.")
-    @Positive(message = "Table number must be a positive number.")
+    @NotNull(message = "table number cannot be null.")
+    @Positive(message = "table number must be a positive number.")
     @JsonProperty("table_number")
     Integer tableNumber;
 
@@ -48,6 +49,16 @@ public class OrderNotificationDTO implements Serializable {
     @NotEmpty(message = "Order must contain at least one item.")
     @Valid
     List<OrderItemDTO> items;
+
+    @JsonCreator
+    public OrderNotificationDTO(
+            @JsonProperty("order_id") Long orderId,
+            @JsonProperty("table_number") Integer tableNumber,
+            @JsonProperty("items") List<OrderItemDTO> items) {
+        this.orderId = orderId;
+        this.tableNumber = tableNumber;
+        this.items = items;
+    }
 
     /**
      * Represents a single, immutable item within an order notification.
@@ -77,6 +88,16 @@ public class OrderNotificationDTO implements Serializable {
         @Size(max = 255, message = "Special requests cannot exceed 255 characters.")
         @JsonProperty("special_requests")
         String specialRequests;
+
+        @JsonCreator
+        public OrderItemDTO(
+                @JsonProperty("menu_item_name") String menuItemName,
+                @JsonProperty("quantity") Integer quantity,
+                @JsonProperty("special_requests") String specialRequests) {
+            this.menuItemName = menuItemName;
+            this.quantity = quantity;
+            this.specialRequests = specialRequests;
+        }
 
         /**
          * Constructs an OrderItemDTO from an OrderItem domain entity.

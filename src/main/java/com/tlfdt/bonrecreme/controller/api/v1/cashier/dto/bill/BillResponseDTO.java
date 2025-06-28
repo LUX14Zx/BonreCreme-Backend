@@ -1,5 +1,6 @@
 package com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
@@ -34,8 +35,8 @@ public class BillResponseDTO {
     /**
      * The number of the table associated with the bill. Must be a positive number.
      */
-    @NotNull(message = "Table number cannot be null.")
-    @Positive(message = "Table number must be a positive number.")
+    @NotNull(message = "table number cannot be null.")
+    @Positive(message = "table number must be a positive number.")
     @JsonProperty("table_number")
     Long tableNumber;
 
@@ -49,9 +50,11 @@ public class BillResponseDTO {
 
     /**
      * The date and time when the bill was finalized. Must not be null.
+     * We add @JsonFormat to ensure it's serialized as a standard ISO-8601 string.
      */
     @NotNull(message = "Bill time cannot be null.")
     @JsonProperty("bill_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime billTime;
 
     /**

@@ -20,8 +20,8 @@ public class BillImageRequest {
     /**
      * The unique identifier of the table for which to generate the bill image.
      */
-    @NotNull(message = "Table ID cannot be null.")
-    @Positive(message = "Table ID must be a positive number.")
+    @NotNull(message = "table ID cannot be null.")
+    @Positive(message = "table ID must be a positive number.")
     Long tableId;
 
 }
