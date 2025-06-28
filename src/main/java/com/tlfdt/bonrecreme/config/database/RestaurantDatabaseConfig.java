@@ -27,7 +27,7 @@ import javax.sql.DataSource;
         entityManagerFactoryRef = "restaurantEntityManagerFactory",
         transactionManagerRef = "restaurantTransactionManager"
 )
-public class RestaurantConfig {
+public class RestaurantDatabaseConfig {
 
     /**
      * Creates the DataSourceProperties for the restaurant database.

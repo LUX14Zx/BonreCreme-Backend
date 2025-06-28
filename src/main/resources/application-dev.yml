@@ -14,12 +14,17 @@ spring:
 
   # --- Primary DataSource Configuration (Conventional Naming) ---
   datasource:
-
+    # ---  "User" DataSource Configuration ---
+    users:
+      url: jdbc:postgresql://localhost:5432/user_db
+      username: bonrecreme
+      password: bonrecremepassword
+      driver-class-name: org.postgresql.Driver
     # ---  "Restaurant" DataSource Configuration ---
     restaurant:
       url: jdbc:postgresql://localhost:5432/restaurant_db
-      username: chef
-      password: chef_pass
+      username: bonrecreme
+      password: bonrecremepassword
       driver-class-name: org.postgresql.Driver
 
   # --- JPA & Hibernate Settings ---
