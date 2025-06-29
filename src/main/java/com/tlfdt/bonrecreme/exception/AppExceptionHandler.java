@@ -2,9 +2,11 @@ package com.tlfdt.bonrecreme.exception;
 
 import com.tlfdt.bonrecreme.controller.api.v1.dto.ApiResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
+import com.tlfdt.bonrecreme.exception.custom.RegistrationException;
 import com.tlfdt.bonrecreme.exception.resource.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -62,6 +64,14 @@ public class AppExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(ApiResponseDTO.error(ex.getMessage()));
     }
+    @ExceptionHandler(RegistrationException.class)
+    public static ResponseEntity<ApiResponseDTO<Object>> RegistrationErrorException(RegistrationException ex) {
+        log.warn("Registration Error: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResponseDTO.error(ex.getMessage()));
+    }
+
 
     /**
      * Handles authentication failures, such as incorrect username or password.

@@ -1,3 +1,5 @@
+// src/main/java/com/tlfdt/bonrecreme/repository/restaurant/BillRepository.java
+
 package com.tlfdt.bonrecreme.repository.restaurant;
 
 import com.tlfdt.bonrecreme.model.restaurant.Bill;
@@ -15,7 +17,16 @@ import java.util.Optional;
 public interface BillRepository extends JpaRepository<Bill, Long> {
 
     @Query("SELECT b FROM Bill b LEFT JOIN FETCH b.orders o LEFT JOIN FETCH o.orderItems WHERE b.seatTable.id = :tableId AND b.status = :status ORDER BY b.createdAt DESC")
-    Optional<Bill> findMostRecentBillWithDetailsByTableIdAndStatus(@Param("tableId") Long tableId, @Param("status") BillStatus status);
+    List<Bill> findMostRecentBillWithDetailsByTableIdAndStatus(@Param("tableId") Long tableId, @Param("status") BillStatus status);
+
+    /**
+     * Checks if any bills are associated with a specific seat table.
+     * This is more efficient than fetching the full list of bills.
+     *
+     * @param tableId The ID of the seat table.
+     * @return true if bills exist for the table, false otherwise.
+     */
+    boolean existsBySeatTableId(Long tableId);
 
     /**
      * Finds all bills with a specific status created within a given date range.

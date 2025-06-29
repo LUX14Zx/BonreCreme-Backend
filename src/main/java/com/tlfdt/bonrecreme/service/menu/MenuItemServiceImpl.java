@@ -79,7 +79,7 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     @Transactional("restaurantTransactionManager")
-    @CacheEvict(allEntries = true) // Evict both single-item and paginated caches for this item
+    @CacheEvict(cacheNames = {"menuItems", "allMenuItems"}, allEntries = true) // Evict both caches
     public void deleteMenuItem(Long id) {
         if (!menuItemRepository.existsById(id)) {
             throw new CustomExceptionHandler("menuitems not found with ID: " + id);

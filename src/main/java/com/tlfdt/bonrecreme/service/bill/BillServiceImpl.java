@@ -1,3 +1,5 @@
+// src/main/java/com/tlfdt/bonrecreme/service/bill/BillServiceImpl.java
+
 package com.tlfdt.bonrecreme.service.bill;
 
 import com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill.BillResponseDTO;
@@ -98,8 +100,11 @@ public class BillServiceImpl implements BillService {
     @Override
     @Transactional(value = "restaurantTransactionManager", readOnly = true)
     public BillResponseDTO getBillForTable(BillRequestDTO request) {
-        Bill bill = billRepository.findMostRecentBillWithDetailsByTableIdAndStatus(request.getTableId(), BillStatus.PENDING)
-                .orElseThrow(() -> new CustomExceptionHandler("No pending bill found for table with id: " + request.getTableId()));
+        List<Bill> bills = billRepository.findMostRecentBillWithDetailsByTableIdAndStatus(request.getTableId(), BillStatus.PENDING);
+        if (bills.isEmpty()) {
+            throw new CustomExceptionHandler("No pending bill found for table with id: " + request.getTableId());
+        }
+        Bill bill = bills.get(0); // Get the most recent bill
 
         return billMapper.toBillResponseDTO(bill);
     }

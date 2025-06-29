@@ -1,3 +1,5 @@
+// src/main/java/com/tlfdt/bonrecreme/service/table/SeatTableServiceImpl.java
+
 package com.tlfdt.bonrecreme.service.table;
 
 import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableRequestDTO;
@@ -5,6 +7,7 @@ import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableResponseDTO
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 import com.tlfdt.bonrecreme.model.restaurant.SeatTable;
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
+import com.tlfdt.bonrecreme.repository.restaurant.BillRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.SeatTableRepository;
 import com.tlfdt.bonrecreme.utils.table.mapper.SeatTableMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +19,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-/**
- * Service implementation for managing restaurant tables.
- * Implements the business logic for CRUD operations on SeatTable entities.
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SeatTableServiceImpl implements SeatTableService {
 
     private final SeatTableRepository tableRepository;
+    private final BillRepository billRepository;
     private final SeatTableMapper tableMapper;
 
     @Override
@@ -74,6 +74,11 @@ public class SeatTableServiceImpl implements SeatTableService {
 
         if (tableToDelete.getStatus() == TableStatus.OCCUPIED) {
             throw new CustomExceptionHandler("Cannot delete a table that is currently occupied.");
+        }
+
+        // Use the new repository method for a precise check
+        if (billRepository.existsBySeatTableId(id)) {
+            throw new CustomExceptionHandler("Cannot delete table with ID: " + id + " because it has associated bills.");
         }
 
         tableRepository.delete(tableToDelete);
