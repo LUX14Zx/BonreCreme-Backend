@@ -26,6 +26,7 @@ public class SeatTable {
     private Long id;
 
     @Column(name = "table_number", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer tableNumber;
 
     @Column(name = "seating_capacity", nullable = false)

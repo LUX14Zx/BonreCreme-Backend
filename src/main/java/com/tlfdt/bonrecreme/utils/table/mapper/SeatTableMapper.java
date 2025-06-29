@@ -35,7 +35,6 @@ public class SeatTableMapper {
      */
     public SeatTable toNewEntity(TableRequestDTO requestDTO) {
         return SeatTable.builder()
-                .tableNumber(requestDTO.getTableNumber())
                 .seatingCapacity(requestDTO.getSeatingCapacity())
                 .status(TableStatus.AVAILABLE) // New tables are always available by default
                 .build();
@@ -48,7 +47,6 @@ public class SeatTableMapper {
      * @param requestDTO The DTO containing the new data.
      */
     public void updateEntityFromDTO(SeatTable seatTable, TableRequestDTO requestDTO) {
-        seatTable.setTableNumber(requestDTO.getTableNumber());
         seatTable.setSeatingCapacity(requestDTO.getSeatingCapacity());
         seatTable.setStatus(requestDTO.getStatus());
     }
