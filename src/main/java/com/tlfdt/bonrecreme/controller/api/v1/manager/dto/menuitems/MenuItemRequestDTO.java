@@ -1,5 +1,6 @@
 package com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -25,14 +26,12 @@ public class MenuItemRequestDTO implements Serializable {
      */
     @NotBlank(message = "Menu item name cannot be blank.")
     @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters.")
-    @JsonProperty("name")
     String name;
 
     /**
      * A description of the menu item. Limited to 255 characters. Can be null.
      */
     @Size(max = 255, message = "Description cannot exceed 255 characters.")
-    @JsonProperty("description")
     String description;
 
     /**
@@ -40,8 +39,20 @@ public class MenuItemRequestDTO implements Serializable {
      */
     @NotNull(message = "Price cannot be null.")
     @DecimalMin(value = "0.0", message = "Price must not be negative.")
-    @JsonProperty("price")
     BigDecimal price;
 
-    
+    /**
+     * A constructor for deserializing JSON into a MenuItemRequestDTO object.
+     * The @JsonCreator annotation tells the JSON parser to use this constructor.
+     * The @JsonProperty annotations map the JSON fields to the constructor parameters.
+     */
+    @JsonCreator
+    public MenuItemRequestDTO(
+            @JsonProperty("name") String name,
+            @JsonProperty("description") String description,
+            @JsonProperty("price") BigDecimal price) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
 }

@@ -1,5 +1,6 @@
 package com.tlfdt.bonrecreme.controller.api.v1.cashier.dto.bill;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -24,114 +25,108 @@ import java.util.List;
 @Builder
 public class BillResponseDTO {
 
-    /**
-     * The unique identifier for the bill. Must be a positive number.
-     */
     @NotNull(message = "Bill ID cannot be null.")
     @Positive(message = "Bill ID must be a positive number.")
     @JsonProperty("bill_id")
     Long billId;
 
-    /**
-     * The ID of the table associated with the bill. Must be a positive number.
-     */
     @NotNull(message = "Table ID cannot be null.")
     @Positive(message = "Table ID must be a positive number.")
     @JsonProperty("table_id")
     Long tableId;
 
-    /**
-     * The total monetary amount of the entire bill. Must be a non-negative value.
-     */
     @NotNull(message = "Total amount cannot be null.")
     @DecimalMin(value = "0.0", message = "Total amount must not be negative.")
     @JsonProperty("total_amount")
     BigDecimal totalAmount;
 
-    /**
-     * The date and time when the bill was finalized. Must not be null.
-     * We add @JsonFormat to ensure it's serialized as a standard ISO-8601 string.
-     */
     @NotNull(message = "Bill time cannot be null.")
     @JsonProperty("bill_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime billTime;
 
-    /**
-     * The payment status of the bill. Must not be null.
-     */
     @NotNull(message = "isPaid status cannot be null.")
     @JsonProperty("is_paid")
     boolean isPaid;
 
-    /**
-     * A list of orders associated with the bill. The list cannot be empty.
-     * Validation is cascaded to the OrderDTO objects within this list.
-     */
     @NotEmpty(message = "A bill must contain at least one order.")
     @Valid
     @JsonProperty("orders")
     List<OrderDTO> orders;
 
-    /**
-     * Represents a single, immutable order within a bill.
-     */
+    // Added @JsonCreator constructor for deserialization
+    @JsonCreator
+    public BillResponseDTO(
+            @JsonProperty("bill_id") Long billId,
+            @JsonProperty("table_id") Long tableId,
+            @JsonProperty("total_amount") BigDecimal totalAmount,
+            @JsonProperty("bill_time") LocalDateTime billTime,
+            @JsonProperty("is_paid") boolean isPaid,
+            @JsonProperty("orders") List<OrderDTO> orders) {
+        this.billId = billId;
+        this.tableId = tableId;
+        this.totalAmount = totalAmount;
+        this.billTime = billTime;
+        this.isPaid = isPaid;
+        this.orders = orders;
+    }
+
     @Value
     @Builder
     public static class OrderDTO {
-        /**
-         * The unique identifier for the order. Must be a positive number.
-         */
         @NotNull(message = "Order ID cannot be null.")
         @Positive(message = "Order ID must be a positive number.")
         @JsonProperty("order_id")
         Long orderId;
 
-        /**
-         * The total price for this specific order. Must be a non-negative value.
-         */
         @NotNull(message = "Total price cannot be null.")
         @DecimalMin(value = "0.0", message = "Total price must not be negative.")
         @JsonProperty("total_price")
         BigDecimal totalPrice;
 
-        /**
-         * A list of items included in the order. The list cannot be empty.
-         * Validation is cascaded to the OrderItemDTO objects.
-         */
         @NotEmpty(message = "An order must contain at least one item.")
         @Valid
         @JsonProperty("items")
         List<OrderItemDTO> items;
+
+        // Added @JsonCreator constructor for deserialization
+        @JsonCreator
+        public OrderDTO(
+                @JsonProperty("order_id") Long orderId,
+                @JsonProperty("total_price") BigDecimal totalPrice,
+                @JsonProperty("items") List<OrderItemDTO> items) {
+            this.orderId = orderId;
+            this.totalPrice = totalPrice;
+            this.items = items;
+        }
     }
 
-    /**
-     * Represents a single, immutable item within an order.
-     */
     @Value
     @Builder
     public static class OrderItemDTO {
-        /**
-         * The name of the menu item. Cannot be blank.
-         */
         @NotBlank(message = "Item name cannot be blank.")
         @JsonProperty("name")
         String name;
 
-        /**
-         * The quantity of this menu item. Must be a positive integer.
-         */
         @NotNull(message = "Quantity cannot be null.")
         @Positive(message = "Quantity must be a positive number.")
         @JsonProperty("quantity")
         int quantity;
 
-        /**
-         * The price of a single unit of this item. Must be a non-negative value.
-         */
         @NotNull(message = "Price cannot be null.")
         @DecimalMin(value = "0.0", message = "Price must not be negative.")
         @JsonProperty("price")
         BigDecimal price;
+
+        // Added @JsonCreator constructor for deserialization
+        @JsonCreator
+        public OrderItemDTO(
+                @JsonProperty("name") String name,
+                @JsonProperty("quantity") int quantity,
+                @JsonProperty("price") BigDecimal price) {
+            this.name = name;
+            this.quantity = quantity;
+            this.price = price;
+        }
     }
 }

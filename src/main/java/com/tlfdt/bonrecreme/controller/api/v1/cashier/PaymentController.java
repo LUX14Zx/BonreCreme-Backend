@@ -36,7 +36,9 @@ public class PaymentController {
             @PathVariable @Positive(message = "Bill ID must be a positive number.") Long billId) {
 
         // Create a PaymentRequest object to pass to the service layer.
-        PaymentRequest paymentRequest = PaymentRequest.builder().billId(billId).build();
+        PaymentRequest paymentRequest = PaymentRequest.builder()
+                .billId(billId)
+                .build();
         BillResponseDTO paidBill = billService.processPayment(paymentRequest);
 
         ApiResponseDTO<BillResponseDTO> response = ApiResponseDTO.<BillResponseDTO>builder()
