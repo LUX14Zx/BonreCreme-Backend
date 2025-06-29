@@ -33,12 +33,12 @@ public class BillResponseDTO {
     Long billId;
 
     /**
-     * The number of the table associated with the bill. Must be a positive number.
+     * The ID of the table associated with the bill. Must be a positive number.
      */
-    @NotNull(message = "table number cannot be null.")
-    @Positive(message = "table number must be a positive number.")
-    @JsonProperty("table_number")
-    Long tableNumber;
+    @NotNull(message = "Table ID cannot be null.")
+    @Positive(message = "Table ID must be a positive number.")
+    @JsonProperty("table_id")
+    Long tableId;
 
     /**
      * The total monetary amount of the entire bill. Must be a non-negative value.

@@ -27,7 +27,7 @@ public class BillMapper {
 
         return BillResponseDTO.builder()
                 .billId(bill.getId())
-                .tableNumber(Long.valueOf(bill.getSeatTable().getTableNumber()))
+                .tableId(bill.getSeatTable().getId()) // Set the tableId from the SeatTable entity
                 .totalAmount(bill.getTotalAmount())
                 .billTime(bill.getCreatedAt())
                 .isPaid(bill.getStatus() == com.tlfdt.bonrecreme.model.restaurant.enums.BillStatus.PAID)

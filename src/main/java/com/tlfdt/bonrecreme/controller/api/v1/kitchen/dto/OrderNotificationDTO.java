@@ -36,12 +36,12 @@ public class OrderNotificationDTO implements Serializable {
     Long orderId;
 
     /**
-     * The number of the table where the order was placed. Must be a positive number.
+     * The ID of the table where the order was placed. Must be a positive number.
      */
-    @NotNull(message = "table number cannot be null.")
-    @Positive(message = "table number must be a positive number.")
-    @JsonProperty("table_number")
-    Integer tableNumber;
+    @NotNull(message = "Table ID cannot be null.")
+    @Positive(message = "Table ID must be a positive number.")
+    @JsonProperty("table_id")
+    Long tableId;
 
     /**
      * A list of items included in the order. Must not be empty.
@@ -53,10 +53,10 @@ public class OrderNotificationDTO implements Serializable {
     @JsonCreator
     public OrderNotificationDTO(
             @JsonProperty("order_id") Long orderId,
-            @JsonProperty("table_number") Integer tableNumber,
+            @JsonProperty("table_id") Long tableId,
             @JsonProperty("items") List<OrderItemDTO> items) {
         this.orderId = orderId;
-        this.tableNumber = tableNumber;
+        this.tableId = tableId;
         this.items = items;
     }
 
@@ -128,7 +128,7 @@ public class OrderNotificationDTO implements Serializable {
 
         return new OrderNotificationDTO(
                 order.getId(),
-                order.getSeatTable().getTableNumber(),
+                order.getSeatTable().getId(), // Use the table ID instead of number
                 itemDTOs
         );
     }

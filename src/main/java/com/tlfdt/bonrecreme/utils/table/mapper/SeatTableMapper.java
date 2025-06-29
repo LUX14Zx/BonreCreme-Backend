@@ -47,7 +47,12 @@ public class SeatTableMapper {
      * @param requestDTO The DTO containing the new data.
      */
     public void updateEntityFromDTO(SeatTable seatTable, TableRequestDTO requestDTO) {
-        seatTable.setSeatingCapacity(requestDTO.getSeatingCapacity());
-        seatTable.setStatus(requestDTO.getStatus());
+        // The table number is not updatable as it reflects the ID.
+        if (requestDTO.getSeatingCapacity() != null) {
+            seatTable.setSeatingCapacity(requestDTO.getSeatingCapacity());
+        }
+        if (requestDTO.getStatus() != null) {
+            seatTable.setStatus(requestDTO.getStatus());
+        }
     }
 }

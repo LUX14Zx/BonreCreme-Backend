@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
         OrderNotificationDTO notificationDTO = OrderNotificationDTO.fromOrder(order);
         publishOrderNotification("order-topic", notificationDTO);
 
-        log.info("Successfully created Order #{} for table #{}", savedOrder.getId(), table.getTableNumber());
+        log.info("Successfully created Order #{} for table #{}", savedOrder.getId(), table.getId());
         return notificationDTO;
     }
 

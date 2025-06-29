@@ -79,14 +79,14 @@ public class SalesReportServiceImpl implements SalesReportService {
         log.info("Generating CSV sales report for {} paid bills.", paidBills.size());
         StringBuilder csvBuilder = new StringBuilder();
         // Header
-        csvBuilder.append("Bill ID,Date,table Number,Total Amount\n");
+        csvBuilder.append("Bill ID,Date,Table ID,Total Amount\n");
 
         // Data Rows
         BigDecimal totalRevenue = BigDecimal.ZERO;
         for (Bill bill : paidBills) {
             csvBuilder.append(bill.getId()).append(",");
             csvBuilder.append(DATE_TIME_FORMATTER.format(bill.getCreatedAt())).append(",");
-            csvBuilder.append(bill.getSeatTable().getTableNumber()).append(",");
+            csvBuilder.append(bill.getSeatTable().getId()).append(","); // Use table ID
             csvBuilder.append(bill.getTotalAmount()).append("\n");
             totalRevenue = totalRevenue.add(bill.getTotalAmount());
         }
@@ -151,7 +151,7 @@ public class SalesReportServiceImpl implements SalesReportService {
         Map<String, Object> map = new HashMap<>();
         map.put("id", bill.getId());
         map.put("createdAt", DATE_TIME_FORMATTER.format(bill.getCreatedAt()));
-        map.put("tableNumber", bill.getSeatTable().getTableNumber());
+        map.put("tableId", bill.getSeatTable().getId()); // Use table ID
         map.put("totalAmount", bill.getTotalAmount());
         return map;
     }

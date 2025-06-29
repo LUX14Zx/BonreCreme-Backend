@@ -62,7 +62,6 @@ class OrderServiceImplTest {
     void setUp() {
         seatTable = SeatTable.builder()
                 .id(1L)
-                .tableNumber(101)
                 .build();
 
         menuItem = MenuItem.builder()

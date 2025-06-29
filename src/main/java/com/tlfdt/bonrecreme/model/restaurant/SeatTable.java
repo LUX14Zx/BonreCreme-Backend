@@ -25,10 +25,6 @@ public class SeatTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "table_number", nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer tableNumber;
-
     @Column(name = "seating_capacity", nullable = false)
     private Integer seatingCapacity;
 
@@ -65,11 +61,11 @@ public class SeatTable {
         if (o == null || getClass() != o.getClass()) return false;
         SeatTable seatTable = (SeatTable) o;
         // Business key for new entities, ID for persisted entities.
-        return id != null ? id.equals(seatTable.id) : Objects.equals(tableNumber, seatTable.tableNumber);
+        return id != null && id.equals(seatTable.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : Objects.hash(tableNumber);
+        return id != null ? id.hashCode() : getClass().hashCode();
     }
 }

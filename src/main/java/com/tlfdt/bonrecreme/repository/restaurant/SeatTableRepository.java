@@ -26,14 +26,6 @@ import java.util.Optional;
 public interface SeatTableRepository extends JpaRepository<SeatTable, Long> {
 
     /**
-     * Finds a table by its unique table number.
-     *
-     * @param tableNumber The number of the table to find.
-     * @return An {@link Optional} containing the {@link SeatTable} if found.
-     */
-    Optional<SeatTable> findByTableNumber(Integer tableNumber);
-
-    /**
      * Finds all tables with a specific status, with support for pagination.
      *
      * @param status   The {@link TableStatus} to filter by (e.g., AVAILABLE, OCCUPIED).

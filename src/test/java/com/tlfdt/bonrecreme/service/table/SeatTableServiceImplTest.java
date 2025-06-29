@@ -43,12 +43,11 @@ class SeatTableServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        tableRequestDTO = new TableRequestDTO(101, 4, TableStatus.AVAILABLE);
+        tableRequestDTO = new TableRequestDTO(4, TableStatus.AVAILABLE);
 
 
         seatTable = SeatTable.builder()
                 .id(1L)
-                .tableNumber(101)
                 .seatingCapacity(4)
                 .status(TableStatus.AVAILABLE)
                 .build();
@@ -58,7 +57,6 @@ class SeatTableServiceImplTest {
 
     @Test
     void testCreateTable_Success() {
-        when(tableRepository.findByTableNumber(anyInt())).thenReturn(Optional.empty());
         when(tableMapper.toNewEntity(any(TableRequestDTO.class))).thenReturn(seatTable);
         when(tableRepository.save(any(SeatTable.class))).thenReturn(seatTable);
         when(tableMapper.toResponseDTO(any(SeatTable.class))).thenReturn(tableResponseDTO);
@@ -67,22 +65,9 @@ class SeatTableServiceImplTest {
 
         assertNotNull(result);
         assertEquals(tableResponseDTO.getId(), result.getId());
-        verify(tableRepository, times(1)).findByTableNumber(anyInt());
         verify(tableMapper, times(1)).toNewEntity(any(TableRequestDTO.class));
         verify(tableRepository, times(1)).save(any(SeatTable.class));
         verify(tableMapper, times(1)).toResponseDTO(any(SeatTable.class));
-    }
-
-    @Test
-    void testCreateTable_TableNumberAlreadyExists() {
-        when(tableRepository.findByTableNumber(anyInt())).thenReturn(Optional.of(seatTable));
-
-        CustomExceptionHandler exception = assertThrows(CustomExceptionHandler.class, () -> seatTableService.createTable(tableRequestDTO));
-
-        assertEquals("A table with number 101 already exists.", exception.getMessage());
-        verify(tableRepository, times(1)).findByTableNumber(anyInt());
-        verifyNoInteractions(tableMapper);
-        verify(tableRepository, never()).save(any(SeatTable.class));
     }
 
     @Test
@@ -127,7 +112,6 @@ class SeatTableServiceImplTest {
     @Test
     void testUpdateTable_Success() {
         when(tableRepository.findById(anyLong())).thenReturn(Optional.of(seatTable));
-        when(tableRepository.findByTableNumber(anyInt())).thenReturn(Optional.empty());
         when(tableRepository.save(any(SeatTable.class))).thenReturn(seatTable);
         when(tableMapper.toResponseDTO(any(SeatTable.class))).thenReturn(tableResponseDTO);
 
@@ -136,7 +120,6 @@ class SeatTableServiceImplTest {
         assertNotNull(result);
         assertEquals(tableResponseDTO.getId(), result.getId());
         verify(tableRepository, times(1)).findById(anyLong());
-        verify(tableRepository, times(1)).findByTableNumber(anyInt());
         verify(tableMapper, times(1)).updateEntityFromDTO(any(SeatTable.class), any(TableRequestDTO.class));
         verify(tableRepository, times(1)).save(any(SeatTable.class));
         verify(tableMapper, times(1)).toResponseDTO(any(SeatTable.class));
@@ -150,25 +133,6 @@ class SeatTableServiceImplTest {
 
         assertEquals("table not found with ID: 1", exception.getMessage());
         verify(tableRepository, times(1)).findById(anyLong());
-        verifyNoInteractions(tableMapper);
-        verify(tableRepository, never()).save(any(SeatTable.class));
-    }
-
-    @Test
-    void testUpdateTable_TableNumberAlreadyInUseByAnotherTable() {
-        SeatTable anotherTable = SeatTable.builder()
-                        .id(2L)
-                                .tableNumber(101)
-                                        .build();
-
-        when(tableRepository.findById(anyLong())).thenReturn(Optional.of(seatTable));
-        when(tableRepository.findByTableNumber(anyInt())).thenReturn(Optional.of(anotherTable));
-
-        CustomExceptionHandler exception = assertThrows(CustomExceptionHandler.class, () -> seatTableService.updateTable(1L, tableRequestDTO));
-
-        assertEquals("Cannot update to table number 101 as it is already in use by another table.", exception.getMessage());
-        verify(tableRepository, times(1)).findById(anyLong());
-        verify(tableRepository, times(1)).findByTableNumber(anyInt());
         verifyNoInteractions(tableMapper);
         verify(tableRepository, never()).save(any(SeatTable.class));
     }

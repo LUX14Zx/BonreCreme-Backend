@@ -20,14 +20,6 @@ public class TableRequestDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The unique number assigned to the table. Must be a positive integer.
-     */
-    @NotNull(message = "table number cannot be null.")
-    @Positive(message = "table number must be a positive integer.")
-    @JsonProperty("table_number")
-    Integer tableNumber;
-
-    /**
      * The maximum number of guests the table can accommodate. Must be a positive integer.
      */
     @NotNull(message = "Seating capacity cannot be null.")
@@ -45,10 +37,8 @@ public class TableRequestDTO implements Serializable {
 
     @JsonCreator
     public TableRequestDTO(
-            @JsonProperty("table_number") Integer tableNumber,
             @JsonProperty("seating_capacity") Integer seatingCapacity,
             @JsonProperty("status") TableStatus status) {
-        this.tableNumber = tableNumber;
         this.seatingCapacity = seatingCapacity;
         this.status = status;
     }

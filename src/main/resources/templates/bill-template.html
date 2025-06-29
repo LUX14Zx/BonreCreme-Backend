@@ -53,7 +53,7 @@
 
     <div class="bill-info">
         <p><strong>Bill ID:</strong> <span th:text="${bill.billId}">B-123</span></p>
-        <p><strong>Table:</strong> <span th:text="${bill.tableNumber}">5</span></p>
+        <p><strong>Table ID:</strong> <span th:text="${bill.tableId}">5</span></p>
         <p><strong>Date:</strong> <span th:text="${#temporals.format(bill.billTime, 'yyyy-MM-dd HH:mm')}">2024-10-27 14:30</span></p>
     </div>
 
