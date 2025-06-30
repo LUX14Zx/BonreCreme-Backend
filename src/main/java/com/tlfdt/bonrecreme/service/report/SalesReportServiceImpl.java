@@ -1,6 +1,7 @@
 package com.tlfdt.bonrecreme.service.report;
 
 import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.report.SalesReportRequestDTO;
+import com.tlfdt.bonrecreme.exception.resource.ResourceNotFoundException;
 import com.tlfdt.bonrecreme.model.restaurant.Bill;
 import com.tlfdt.bonrecreme.model.restaurant.enums.BillStatus;
 import com.tlfdt.bonrecreme.repository.restaurant.BillRepository;
@@ -43,7 +44,12 @@ public class SalesReportServiceImpl implements SalesReportService {
     @Transactional(value = "restaurantTransactionManager", readOnly = true)
     public byte[] generateSalesReport(SalesReportRequestDTO request) throws IOException, JRException {
         // Fetch data using the optimized repository method
-        List<Bill> paidBills = findPaidBillsForMonth(request.year(), request.month());
+        List<Bill> paidBills = findPaidBillsByYearMonth(request.year(), request.month());
+
+        // Add this check
+        if (paidBills.isEmpty()) {
+            throw new ResourceNotFoundException("No paid bills found for the selected period.");
+        }
 
         return switch (request.format()) {
             case CSV -> generateCsvReport(paidBills);
@@ -59,7 +65,8 @@ public class SalesReportServiceImpl implements SalesReportService {
      * @param month The month of the report.
      * @return A list of paid bills for the specified period.
      */
-    private List<Bill> findPaidBillsForMonth(int year, int month) {
+    private List<Bill> findPaidBillsByYearMonth(int year, int month) {
+
         YearMonth yearMonth = YearMonth.of(year, month);
         LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
         // The end date is exclusive, so we start at the beginning of the next month.
@@ -76,23 +83,29 @@ public class SalesReportServiceImpl implements SalesReportService {
      * @return A byte array containing the report in CSV format.
      */
     private byte[] generateCsvReport(List<Bill> paidBills) {
+
         log.info("Generating CSV sales report for {} paid bills.", paidBills.size());
+
         StringBuilder csvBuilder = new StringBuilder();
         // Header
-        csvBuilder.append("Bill ID,Date,Table ID,Total Amount\n");
+        csvBuilder.append("Date,Bill,Table,Total Amount,\n");
 
         // Data Rows
         BigDecimal totalRevenue = BigDecimal.ZERO;
-        for (Bill bill : paidBills) {
-            csvBuilder.append(bill.getId()).append(",");
+        for (Bill bill : paidBills)
+        {
             csvBuilder.append(DATE_TIME_FORMATTER.format(bill.getCreatedAt())).append(",");
-            csvBuilder.append(bill.getSeatTable().getId()).append(","); // Use table ID
+            csvBuilder.append(bill.getId()).append(",");
+            csvBuilder.append(bill.getSeatTable().getId()).append(",");
             csvBuilder.append(bill.getTotalAmount()).append("\n");
             totalRevenue = totalRevenue.add(bill.getTotalAmount());
         }
 
-        // Summary Footer
-        csvBuilder.append("\n,,Total Revenue,").append(totalRevenue);
+        // Add a blank line for separation
+        csvBuilder.append("\n");
+
+        // A clearer, left-aligned footer
+        csvBuilder.append("Total Revenue,,,").append(totalRevenue).append("\n");
 
         return csvBuilder.toString().getBytes(StandardCharsets.UTF_8);
     }

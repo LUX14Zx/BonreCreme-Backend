@@ -5,6 +5,7 @@ import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.menuitems.MenuItemResp
 import com.tlfdt.bonrecreme.service.menu.MenuItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/customer/menu")
 @RequiredArgsConstructor
+@Validated // Enables validation for path variables and request parameters.
 public class MenuController {
 
     private final MenuItemService menuItemService;

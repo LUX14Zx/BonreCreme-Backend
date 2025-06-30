@@ -5,6 +5,7 @@ package com.tlfdt.bonrecreme.service.table;
 import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableRequestDTO;
 import com.tlfdt.bonrecreme.controller.api.v1.manager.dto.table.TableResponseDTO;
 import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
+import com.tlfdt.bonrecreme.model.restaurant.Bill;
 import com.tlfdt.bonrecreme.model.restaurant.SeatTable;
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
 import com.tlfdt.bonrecreme.repository.restaurant.BillRepository;
@@ -76,10 +77,15 @@ public class SeatTableServiceImpl implements SeatTableService {
             throw new CustomExceptionHandler("Cannot delete a table that is currently occupied.");
         }
 
-        // Use the new repository method for a precise check
-        if (billRepository.existsBySeatTableId(id)) {
-            throw new CustomExceptionHandler("Cannot delete table with ID: " + id + " because it has associated bills.");
+        // Find all bills for the table
+        List<Bill> bills = billRepository.findAllBySeatTableId(id);
+
+        // Set the seatTable to null for each bill
+        for (Bill bill : bills) {
+            bill.setSeatTable(null);
         }
+
+        // The changes to the bills will be saved automatically by the @Transactional annotation.
 
         tableRepository.delete(tableToDelete);
         log.info("Deleted table with ID: {}", id);

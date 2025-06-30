@@ -20,15 +20,6 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     List<Bill> findMostRecentBillWithDetailsByTableIdAndStatus(@Param("tableId") Long tableId, @Param("status") BillStatus status);
 
     /**
-     * Checks if any bills are associated with a specific seat table.
-     * This is more efficient than fetching the full list of bills.
-     *
-     * @param tableId The ID of the seat table.
-     * @return true if bills exist for the table, false otherwise.
-     */
-    boolean existsBySeatTableId(Long tableId);
-
-    /**
      * Finds all bills with a specific status created within a given date range.
      * This query is optimized to fetch all associated data (SeatTable)
      * in a single database call to prevent N+1 issues when accessing table numbers.
@@ -43,4 +34,14 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
             @Param("status") BillStatus status,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
+
+
+    /**
+     * Finds all bills associated with a specific seat table.
+     *
+     * @param tableId The ID of the seat table.
+     * @return A list of bills for the given table.
+     */
+    @Query("SELECT b FROM Bill b WHERE b.seatTable.id = :tableId")
+    List<Bill> findAllBySeatTableId(@Param("tableId") Long tableId);
 }

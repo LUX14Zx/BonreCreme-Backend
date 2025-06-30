@@ -38,6 +38,21 @@ public class GenerateReportController {
      * @throws IOException if an error occurs during file generation.
      * @throws JRException if there's an issue with the reporting engine.
      */
+
+    /**
+     * Helper method to create a standardized reports filename.
+     *
+     * @param year      The year of the reports.
+     * @param month     The month of the reports.
+     * @param extension The file extension (e.g., "csv", "pdf").
+     * @return A formatted filename string.
+     */
+    private String generateReportFilename(int year, int month, String extension) {
+        // Pads the month with a leading zero if necessary (e.g., 7 -> 07)
+        String formattedMonth = String.format("%02d", month);
+        return String.format("sales-report-%d-%s.%s", year, formattedMonth, extension);
+    }
+
     @GetMapping("/excel")
     public ResponseEntity<byte[]> downloadMonthlyReportCSV(
             @RequestParam @Range(min = 2000, max = 2100, message = "Year must be between 2000 and 2100") int year,
@@ -77,19 +92,5 @@ public class GenerateReportController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdfReport);
-    }
-
-    /**
-     * Helper method to create a standardized reports filename.
-     *
-     * @param year      The year of the reports.
-     * @param month     The month of the reports.
-     * @param extension The file extension (e.g., "csv", "pdf").
-     * @return A formatted filename string.
-     */
-    private String generateReportFilename(int year, int month, String extension) {
-        // Pads the month with a leading zero if necessary (e.g., 7 -> 07)
-        String formattedMonth = String.format("%02d", month);
-        return String.format("sales-report-%d-%s.%s", year, formattedMonth, extension);
     }
 }
