@@ -29,8 +29,8 @@ services:
     environment:
       - POSTGRES_USER=bonrecreme
       - POSTGRES_PASSWORD=bonrecremepassword
-    ports:
-      - '5432:5432'
+    expose:
+      - "5432"
     networks:
       - db
     volumes:
@@ -38,8 +38,8 @@ services:
       - ./docker/database/init_db.sql:/docker-entrypoint-initdb.d/init.sql
   redis:
     image: 'redis:latest'
-    ports:
-      - '6379:6379'
+    expose:
+      - "6379"
     volumes:
       - redis_cache:/cache
     networks:
@@ -47,8 +47,8 @@ services:
   kafka:
     image: docker.io/bitnami/kafka:3.4
     hostname: kafka
-    ports:
-      - "9092:9092"
+    expose:
+      - "9092"
     volumes:
       - "kafka_data:/bitnami"
     environment:
@@ -68,5 +68,6 @@ services:
       # ------ Other Settings ------
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_NUM_PARTITIONS=2
     networks:
       - messaging

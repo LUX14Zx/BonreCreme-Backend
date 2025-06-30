@@ -96,13 +96,6 @@ public class SalesReportServiceImpl implements SalesReportService {
         {
             csvBuilder.append(DATE_TIME_FORMATTER.format(bill.getCreatedAt())).append(",");
             csvBuilder.append(bill.getId()).append(",");
-            // --- Start of the fix ---
-            // Check if the table exists before accessing it.
-            if (bill.getSeatTable() != null) {
-                csvBuilder.append(bill.getSeatTable().getId());
-            } else {
-                csvBuilder.append("N/A"); // Use a placeholder if the table was deleted.
-            }
             csvBuilder.append(bill.getTotalAmount()).append("\n");
             totalRevenue = totalRevenue.add(bill.getTotalAmount());
         }
@@ -170,12 +163,6 @@ public class SalesReportServiceImpl implements SalesReportService {
         Map<String, Object> map = new HashMap<>();
         map.put("id", bill.getId());
         map.put("createdAt", DATE_TIME_FORMATTER.format(bill.getCreatedAt()));
-        // Check if the table exists before accessing it
-        if (bill.getSeatTable() != null) {
-            map.put("tableId", bill.getSeatTable().getId());
-        } else {
-            map.put("tableId", "N/A"); // Or some other placeholder
-        }
         map.put("totalAmount", bill.getTotalAmount());
         return map;
     }
