@@ -6,6 +6,7 @@ import com.tlfdt.bonrecreme.exception.custom.CustomExceptionHandler;
 import com.tlfdt.bonrecreme.model.restaurant.MenuItem;
 import com.tlfdt.bonrecreme.model.restaurant.SeatTable;
 import com.tlfdt.bonrecreme.model.restaurant.enums.TableStatus;
+import com.tlfdt.bonrecreme.repository.restaurant.BillRepository;
 import com.tlfdt.bonrecreme.repository.restaurant.SeatTableRepository;
 import com.tlfdt.bonrecreme.utils.table.mapper.SeatTableMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +32,9 @@ class SeatTableServiceImplTest {
 
     @Mock
     private SeatTableRepository tableRepository;
+
+    @Mock
+    private BillRepository billRepository; // Mock the BillRepository
 
     @Mock
     private SeatTableMapper tableMapper;
@@ -141,11 +146,16 @@ class SeatTableServiceImplTest {
     void testDeleteTable_Success() {
         seatTable.setStatus(TableStatus.AVAILABLE);
         when(tableRepository.findById(anyLong())).thenReturn(Optional.of(seatTable));
+
+        // Mock the behavior of the billRepository
+        when(billRepository.findAllBySeatTableId(anyLong())).thenReturn(Collections.emptyList());
+
         doNothing().when(tableRepository).delete(any(SeatTable.class));
 
         seatTableService.deleteTable(1L);
 
         verify(tableRepository, times(1)).findById(anyLong());
+        verify(billRepository, times(1)).findAllBySeatTableId(anyLong());
         verify(tableRepository, times(1)).delete(any(SeatTable.class));
     }
 

@@ -10,7 +10,7 @@ server:
 spring:
   # --- Spring Active Profile Configuration ---
   profiles:
-    active: dev
+    active: prod
   application:
     name: BonreCreme-Restaurant
 
