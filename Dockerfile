@@ -10,7 +10,7 @@ RUN mvn dependency:go-offline
 
 # Copy source code and build the application
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests # Skip Because It's can't be built (docker compose build because other service unavailiable)
 
 # --- Stage 2: Run the application ---
 FROM eclipse-temurin:21-jdk-alpine
