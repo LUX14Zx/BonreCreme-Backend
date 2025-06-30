@@ -1,99 +1,74 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="SalesReport" pageWidth="595" pageHeight="842" columnWidth="555"
-              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
-              uuid="3a3e7e2c-2b6a-4b0a-8a4e-1b4a682c7e8f">
-    <style name="ColumnHeader" mode="Opaque" backcolor="#D3D3D3" hTextAlign="Center" vTextAlign="Middle" fontName="SansSerif" fontSize="11" isBold="true"/>
-    <style name="Detail" hTextAlign="Center" vTextAlign="Middle" fontName="SansSerif" fontSize="10"/>
-    <style name="Total" hTextAlign="Right" vTextAlign="Middle" fontName="SansSerif" fontSize="12" isBold="true"/>
-
-    <parameter name="ReportTitle" class="java.lang.String"/>
-    <parameter name="MonthYear" class="java.lang.String"/>
-    <parameter name="TotalSales" class="java.math.BigDecimal"/>
-    <queryString>
-        <![CDATA[]]>
-    </queryString>
-    <field name="id" class="java.lang.Long"/>
-    <field name="createdAt" class="java.lang.String"/>
-    <field name="totalAmount" class="java.math.BigDecimal"/>
-    <title>
-        <band height="60">
-            <textField>
-                <reportElement x="0" y="10" width="555" height="30" uuid="e0b8a6e4-4cda-4e6f-b84e-3d0b2e3c4f5a"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="18" isBold="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{ReportTitle}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="0" y="40" width="555" height="20" uuid="1c9a1d3f-5b1e-4f1e-9a8c-7b6a5d4e3f2a"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="12"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{MonthYear}]]></textFieldExpression>
-            </textField>
-        </band>
-    </title>
-    <columnHeader>
-        <band height="30">
-            <staticText>
-                <reportElement style="ColumnHeader" x="0" y="0" width="100" height="30" uuid="8f4b2a8d-1c3e-4b2a-a8d4-1b3a2c5d6e7f"/>
-                <box><pen lineWidth="0.5"/></box>
-                <text><![CDATA[Bill ID]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="ColumnHeader" x="100" y="0" width="200" height="30" uuid="9c8d7e6f-2b4a-4c1d-b8e7-f6a5d4c3b2a1"/>
-                <box><pen lineWidth="0.5"/></box>
-                <text><![CDATA[Date]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="ColumnHeader" x="455" y="0" width="100" height="30" uuid="f2a1b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-                <box><pen lineWidth="0.5"/></box>
-                <text><![CDATA[Amount]]></text>
-            </staticText>
-        </band>
-    </columnHeader>
-    <detail>
-        <band height="20">
-            <textField>
-                <reportElement style="Detail" x="0" y="0" width="100" height="20" uuid="a8b9c0d1-e2f3-4a5b-8c9d-0e1f2a3b4c5d"/>
-                <box><pen lineWidth="0.5"/></box>
-                <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="Detail" x="100" y="0" width="200" height="20" uuid="b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e"/>
-                <box><pen lineWidth="0.5"/></box>
-                <textFieldExpression><![CDATA[$F{createdAt}]]></textFieldExpression>
-            </textField>
-            <textField pattern="¤ #,##0.00">
-                <reportElement style="Detail" x="455" y="0" width="100" height="20" uuid="d7e8f9a0-b1c2-4d3e-b4f5-a6b7c8d9e0f1"/>
-                <box><pen lineWidth="0.5"/></box>
-                <textElement textAlignment="Right" verticalAlignment="Middle">
-                    <paragraph rightIndent="5"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{totalAmount}]]></textFieldExpression>
-            </textField>
-        </band>
-    </detail>
-    <summary>
-        <band height="40">
-            <line>
-                <reportElement x="0" y="5" width="555" height="1" uuid="0a6a3a41-8b29-45a7-86d7-2f3b8a3e4e9f"/>
-            </line>
-            <staticText>
-                <reportElement style="Total" x="300" y="10" width="155" height="30" uuid="b2b3b4d5-e6f7-4890-a1b2-c3d4e5f6a7b8"/>
-                <textElement textAlignment="Right"/>
-                <text><![CDATA[Total Sales:]]></text>
-            </staticText>
-            <textField pattern="¤ #,##0.00">
-                <reportElement style="Total" x="455" y="10" width="100" height="30" uuid="c3d4e5f6-a7b8-4901-b2c3-d4e5f6a7b8c9"/>
-                <textElement textAlignment="Right">
-                    <paragraph rightIndent="5"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{TotalSales}]]></textFieldExpression>
-            </textField>
-        </band>
-    </summary>
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="SalesReport" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3a3e7e2c-2b6a-4b0a-8a4e-1b4a682c7e8f">
+	<style name="ColumnHeader" mode="Opaque" backcolor="#D3D3D3" hTextAlign="Center" vTextAlign="Middle" fontName="SansSerif" fontSize="11.0" bold="true"/>
+	<style name="Detail" hTextAlign="Center" vTextAlign="Middle" fontName="SansSerif" fontSize="10.0"/>
+	<style name="Total" hTextAlign="Right" vTextAlign="Middle" fontName="SansSerif" fontSize="12.0" bold="true"/>
+	<parameter name="ReportTitle" class="java.lang.String"/>
+	<parameter name="MonthYear" class="java.lang.String"/>
+	<parameter name="TotalSales" class="java.math.BigDecimal"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="id" class="java.lang.Long"/>
+	<field name="createdAt" class="java.lang.String"/>
+	<field name="totalAmount" class="java.math.BigDecimal"/>
+	<title height="60">
+		<element kind="textField" uuid="e0b8a6e4-4cda-4e6f-b84e-3d0b2e3c4f5a" x="0" y="10" width="555" height="30" fontSize="18.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$P{ReportTitle}]]></expression>
+		</element>
+		<element kind="textField" uuid="1c9a1d3f-5b1e-4f1e-9a8c-7b6a5d4e3f2a" x="0" y="40" width="555" height="20" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$P{MonthYear}]]></expression>
+		</element>
+	</title>
+	<columnHeader height="30">
+		<element kind="staticText" uuid="8f4b2a8d-1c3e-4b2a-a8d4-1b3a2c5d6e7f" x="80" y="0" width="100" height="30" style="ColumnHeader">
+			<text><![CDATA[Bill ID]]></text>
+			<box style="ColumnHeader">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="9c8d7e6f-2b4a-4c1d-b8e7-f6a5d4c3b2a1" x="180" y="0" width="200" height="30" style="ColumnHeader">
+			<text><![CDATA[Date]]></text>
+			<box style="ColumnHeader">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="f2a1b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c" x="380" y="0" width="100" height="30" style="ColumnHeader">
+			<text><![CDATA[Amount]]></text>
+			<box style="ColumnHeader">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<element kind="textField" uuid="a8b9c0d1-e2f3-4a5b-8c9d-0e1f2a3b4c5d" x="80" y="0" width="100" height="20" style="Detail">
+				<expression><![CDATA[$F{id}]]></expression>
+				<box style="Detail">
+					<pen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e" x="180" y="0" width="200" height="20" style="Detail">
+				<expression><![CDATA[$F{createdAt}]]></expression>
+				<box style="Detail">
+					<pen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="d7e8f9a0-b1c2-4d3e-b4f5-a6b7c8d9e0f1" x="380" y="0" width="100" height="20" pattern="¤ #,##0.00" hTextAlign="Right" vTextAlign="Middle" style="Detail">
+				<paragraph rightIndent="5" style="Detail"/>
+				<expression><![CDATA[$F{totalAmount}]]></expression>
+				<box style="Detail">
+					<pen lineWidth="0.5"/>
+				</box>
+			</element>
+		</band>
+	</detail>
+	<summary height="60">
+		<element kind="line" uuid="0a6a3a41-8b29-45a7-86d7-2f3b8a3e4e9f" x="0" y="20" width="555" height="1"/>
+		<element kind="staticText" uuid="b2b3b4d5-e6f7-4890-a1b2-c3d4e5f6a7b8" x="300" y="30" width="155" height="30" hTextAlign="Right" style="Total">
+			<text><![CDATA[Total Sales:]]></text>
+		</element>
+		<element kind="textField" uuid="c3d4e5f6-a7b8-4901-b2c3-d4e5f6a7b8c9" x="455" y="30" width="100" height="30" pattern="¤ #,##0.00" hTextAlign="Right" style="Total">
+			<paragraph rightIndent="5" style="Total"/>
+			<expression><![CDATA[$P{TotalSales}]]></expression>
+		</element>
+	</summary>
 </jasperReport>
