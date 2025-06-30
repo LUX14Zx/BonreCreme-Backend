@@ -10,19 +10,21 @@ server:
 spring:
   docker:
     compose:
-      enabled: true
+      enabled: false
 
   # --- Primary DataSource Configuration (Conventional Naming) ---
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_db
-    username: chef
-    password: chef_pass
-    driver-class-name: org.postgresql.Driver
-    # --- Secondary "Restaurant" DataSource Configuration ---
+    # ---  "User" DataSource Configuration ---
+    users:
+      url: jdbc:postgresql://localhost:5432/user_db
+      username: bonrecreme
+      password: bonrecremepassword
+      driver-class-name: org.postgresql.Driver
+    # ---  "Restaurant" DataSource Configuration ---
     restaurant:
       url: jdbc:postgresql://localhost:5432/restaurant_db
-      username: chef
-      password: chef_pass
+      username: bonrecreme
+      password: bonrecremepassword
       driver-class-name: org.postgresql.Driver
 
   # --- JPA & Hibernate Settings ---
@@ -77,12 +79,10 @@ cache:
   default:
     # Default Time-to-live (TTL) for cache entries in seconds.
     # For example: 3600 = 1 hour, 86400 = 1 day
-    ttl: 3600
+    ttl: 86400
 
 # --- Json Web Token (JWT) Configuration ---
 jwt:
-  # IMPORTANT: For production, this secret should be externalized and not stored
-  # in version control. Use an environment variable instead.
   # Example: secret: ${JWT_SECRET}
   secret: |
     678e34f0f0987e80d7a917135d8f26e41e4db57ba2ca9f0c789b3bbb4ecffc9e24d6cb9c47d572fcb8e65b8dc76f6acf9e9ddb8240bed9194054a888ed9f6ee19737784570bb2e973b525c9cfa7d7541f7be096ce023e613342e05aca7b8c6bd87946db9c465b34312ab0addd10e0a13d6e6ebb5ac76abaaf47e9ae1e7c6fd04027aa5a9dd5e349c628666e4c9feb4675a2267f9f07d367ed5a96c1cc0246917251b51f4902beed7fb29de01ce69ede92208bdbe44a22979f193a5c098540c4db60b0517238e3c6554075e44f8384c5b0fca20af527ad43efd64c9438891c506290943fbc3d9832dc38dde359f21626212111777f2aacce15c6bc029d66985fd
@@ -95,11 +95,11 @@ logging:
   level:
     org:
       springframework:
-        security: DEBUG # Enable detailed security logging for development
+        security: WARN # Enable detailed security logging for development
 
 # ===================================================================
 # Server Sent Event CONFIGURATION
 # ===================================================================
 application:
   sse:
-    heartbeat-interval-seconds: 25 # Example: Overrides the default of 20
+    heartbeat-interval-seconds: 30 # Example: Overrides the default of 20

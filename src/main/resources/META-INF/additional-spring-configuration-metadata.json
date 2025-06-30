@@ -1,53 +1,64 @@
-{"properties": [
-  {
-    "name": "jwt.secret",
-    "type": "java.lang.String",
-    "description": "Secret key used for signing JWT tokens for authentication and authorization"
-  },
-  {
-    "name": "jwt.expirationMilliSecond ",
-    "type": "java.lang.Long",
-    "description": "JWT token expiration time in milliseconds"
-  },
-  {
-    "name": "spring.datasource.users.url",
-    "type": "java.lang.String",
-    "description": "JDBC URL for the users database connection"
-  },
-  {
-    "name": "spring.datasource.users.username",
-    "type": "java.lang.String",
-    "description": "Username for authenticating to the users database"
-  },
-  {
-    "name": "spring.datasource.users.password",
-    "type": "java.lang.String",
-    "description": "Password for authenticating to the users database"
-  },
-  {
-    "name": "spring.datasource.users.driver-class-name",
-    "type": "java.lang.String",
-    "description": "JDBC driver class name for the users database connection"
-  },
-  {
-    "name": "spring.datasource.restaurant.url",
-    "type": "java.lang.String",
-    "description": "JDBC URL for the restaurant database connection"
-  },
-  {
-    "name": "spring.datasource.restaurant.username",
-    "type": "java.lang.String",
-    "description": "Username for authenticating to the restaurant database"
-  },
-  {
-    "name": "spring.datasource.restaurant.password",
-    "type": "java.lang.String",
-    "description": "Password for authenticating to the restaurant database"
-  },
-  {
-    "name": "spring.datasource.restaurant.driver-class-name",
-    "type": "java.lang.String",
-    "description": "JDBC driver class name for the restaurant database connection"
-  }
-
-]}
+{
+  "properties": [
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret key used for signing JWT tokens for authentication and authorization"
+    },
+    {
+      "name": "jwt.expirationMilliSecond",
+      "type": "java.lang.Long",
+      "description": "Expiration time (in milliseconds) for JWT tokens"
+    },
+    {
+      "name": "spring.datasource.users.url",
+      "type": "java.lang.String",
+      "description": "JDBC URL for connecting to the users database"
+    },
+    {
+      "name": "spring.datasource.users.username",
+      "type": "java.lang.String",
+      "description": "Username for authenticating to the users database"
+    },
+    {
+      "name": "spring.datasource.users.password",
+      "type": "java.lang.String",
+      "description": "Password for authenticating to the users database"
+    },
+    {
+      "name": "spring.datasource.users.driver-class-name",
+      "type": "java.lang.String",
+      "description": "JDBC driver class name for the users database connection"
+    },
+    {
+      "name": "spring.datasource.restaurant.url",
+      "type": "java.lang.String",
+      "description": "JDBC URL for connecting to the restaurant database"
+    },
+    {
+      "name": "spring.datasource.restaurant.username",
+      "type": "java.lang.String",
+      "description": "Username for authenticating to the restaurant database"
+    },
+    {
+      "name": "spring.datasource.restaurant.password",
+      "type": "java.lang.String",
+      "description": "Password for authenticating to the restaurant database"
+    },
+    {
+      "name": "spring.datasource.restaurant.driver-class-name",
+      "type": "java.lang.String",
+      "description": "JDBC driver class name for the restaurant database connection"
+    },
+    {
+      "name": "spring.report.bill-image.width",
+      "type": "java.lang.Integer",
+      "description": "Width (in pixels) of the bill image generated in reports"
+    },
+    {
+      "name": "spring.report.bill-image.template-name",
+      "type": "java.lang.String",
+      "description": "Template file name used for rendering bill images in reports"
+    }
+  ]
+}
