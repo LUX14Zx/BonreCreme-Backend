@@ -1,8 +1,11 @@
 package com.tlfdt.bonrecreme;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+
+import java.util.TimeZone;
 
 /**
  * The main entry point for the BonreCreme application.
@@ -27,6 +30,15 @@ public class BonreCremeApplication {
      */
     public static void main(String[] args) {
         SpringApplication.run(BonreCremeApplication.class, args);
+    }
+
+    /**
+     *  Set The Local Timezone for Spring boot Application
+     */
+    @PostConstruct
+    public void init() {
+        // Set the default time zone to your country's time zone
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Bangkok"));
     }
 
 }

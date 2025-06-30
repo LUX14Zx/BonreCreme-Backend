@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.tlfdt</groupId>
     <artifactId>BonreCreme</artifactId>
-    <version>0.1.1-RELEASE</version>
+    <version>0.1.3</version>
     <name>BonreCreme</name>
     <description>BonreCreme</description>
     <url/>

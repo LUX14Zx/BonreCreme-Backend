@@ -29,7 +29,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
      * @param endDate   The end of the date range (exclusive).
      * @return A list of {@link Bill} objects with their associated SeatTable eagerly fetched.
      */
-    @Query("SELECT b FROM Bill b JOIN FETCH b.seatTable WHERE b.status = :status AND b.createdAt >= :startDate AND b.createdAt < :endDate")
+    @Query("SELECT b FROM Bill b WHERE b.status = :status AND b.createdAt >= :startDate AND b.createdAt < :endDate")
     List<Bill> findBillsWithDetailsByStatusAndDateRange(
             @Param("status") BillStatus status,
             @Param("startDate") LocalDateTime startDate,

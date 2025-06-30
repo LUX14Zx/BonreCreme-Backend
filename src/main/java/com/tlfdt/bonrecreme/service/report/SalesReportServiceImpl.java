@@ -88,7 +88,7 @@ public class SalesReportServiceImpl implements SalesReportService {
 
         StringBuilder csvBuilder = new StringBuilder();
         // Header
-        csvBuilder.append("Date,Bill,Table,Total Amount,\n");
+        csvBuilder.append("Date,Bill,Total Amount,\n");
 
         // Data Rows
         BigDecimal totalRevenue = BigDecimal.ZERO;
@@ -97,14 +97,17 @@ public class SalesReportServiceImpl implements SalesReportService {
             csvBuilder.append(DATE_TIME_FORMATTER.format(bill.getCreatedAt())).append(",");
             csvBuilder.append(bill.getId()).append(",");
             csvBuilder.append(bill.getTotalAmount()).append("\n");
+
             totalRevenue = totalRevenue.add(bill.getTotalAmount());
         }
 
         // Add a blank line for separation
-        csvBuilder.append("\n");
+        csvBuilder.append("\n\n\n");
 
         // A clearer, left-aligned footer
-        csvBuilder.append("Total Revenue,,,").append(totalRevenue).append("\n");
+        csvBuilder.append("Total Revenue,,")
+                  .append(totalRevenue)
+                  .append("\n");
 
         return csvBuilder.toString().getBytes(StandardCharsets.UTF_8);
     }
